@@ -2,6 +2,7 @@
 
 // Polished animated border effect
 import { ShineBorder } from '@/components/ui/shine-border';
+import { Vector2 } from 'three';
 
 import React, { useRef, useState, useMemo, useEffect } from 'react';
 import { Canvas, useFrame, extend, useThree } from '@react-three/fiber';
@@ -466,8 +467,8 @@ function Effects() {
 
   return (
     <effectComposer ref={composer} args={[gl]}>
-      <renderPass attachArray="passes" scene={scene} camera={camera} />
-      <unrealBloomPass attachArray="passes" args={[undefined, 1.2, 0.6, 0]} />
+      <renderPass attach="passes" scene={scene} camera={camera} />
+      <unrealBloomPass attach="passes" args={[new Vector2(size.width, size.height), 1.2, 0.6, 0]} />
     </effectComposer>
   );
 }

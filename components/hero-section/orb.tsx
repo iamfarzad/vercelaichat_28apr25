@@ -1,6 +1,6 @@
 import React from 'react';
 import './orb.css';
-import Orb3D from './orb3D';
+import { Orb3D } from './orb3D';
 
 interface GlowingOrbProps {
   className?: string;

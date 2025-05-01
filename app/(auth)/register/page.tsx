@@ -45,7 +45,7 @@ export default function Page() {
     // If auth is muted, skip actual registration and mock success
     // Otherwise, call the register action
     try {
-      const result = await register(formData);
+      const result = await register(state, formData);
       setState(result);
     } catch (e) {
       setState({ status: 'failed' });
