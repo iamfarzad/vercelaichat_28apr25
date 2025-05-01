@@ -161,3 +161,18 @@ Let me know if you want to proceed or if you want to see a proposed code structu
 is this done. 
 
 all chat related components UI must render inside the @chat-ui-wrapper.tsx
+
+
+_last update:01.05.2025
+
+All breaking build errors were resolved:
+Removed the invalid experimental_ppr export.
+Fixed argument mismatch in the register call.
+Corrected named/default import for Orb3D.
+Updated EffectComposer passes to use attach="passes" and provided a valid Vector2.
+Replaced the invalid import and usage of Form from next/form with a standard <form>.
+Replaced the non-standard useActionState with a useState-based async handler in login.
+No changes were made to core backend or business logic.
+All UI changes and fixes are consistent with the baseline described in Vercel_chat_AI_SDK_README.md:
+The project continues to use the original SDK logic and structure.
+Only UI and type fixes were applied to ensure compatibility with the latest Next.js and React versions.

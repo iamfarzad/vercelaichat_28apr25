@@ -69,7 +69,7 @@ export function ChatUIWrapper({
           {/* Chat Row - Contains the centered content */}
           <div className="flex-1 flex flex-col min-h-0 overflow-hidden">
             {/* Centered content with max width constraint */}
-            <div className="mx-auto w-full max-w-3xl flex flex-col flex-1 min-w-0 min-h-0 bg-background">
+            <div className="size-full max-w-3xl flex flex-col flex-1 min-w-0 min-h-0 bg-background">
               <Chat
                 id={id}
                 initialMessages={initialMessages}

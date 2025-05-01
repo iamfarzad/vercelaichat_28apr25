@@ -93,12 +93,12 @@ export function ChatPopover({
               ×
             </button>
             {/* Content container */}
-            <div className="isolate flex w-full h-full overflow-hidden z-[1]">
+            <div className="isolate flex size-full overflow-hidden z-[1]">
               <SidebarStateConsumer
                 render={({ sidebarIsOpen }) => (
                   <>
                     {sidebarIsOpen && (
-                      <div className="h-full w-[260px] max-w-[260px] border-r border-zinc-200 dark:border-zinc-800 overflow-hidden duration-300 transition-[width]">
+                      <div className="size-full w-[260px] max-w-[260px] border-r border-zinc-200 dark:border-zinc-800 overflow-hidden duration-300 transition-[width]">
                         <AppSidebar user={session?.user} />
                       </div>
                     )}

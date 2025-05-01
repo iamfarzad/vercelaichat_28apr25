@@ -1,5 +1,3 @@
-
-
 import { signOut } from '@/app/(auth)/auth';
 
 export const SignOutForm = () => {
