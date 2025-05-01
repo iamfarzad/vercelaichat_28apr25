@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { useActionState, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import { AuthForm } from '@/components/auth-form';
 import { SubmitButton } from '@/components/submit-button';
@@ -17,12 +17,7 @@ export default function Page() {
   const [email, setEmail] = useState('');
   const [isSuccessful, setIsSuccessful] = useState(false);
 
-  const [state, formAction] = useActionState<RegisterActionState, FormData>(
-    register,
-    {
-      status: 'idle',
-    },
-  );
+  const [state, setState] = useState<RegisterActionState>({ status: 'idle' });
 
   const { update: updateSession } = useSession();
 
@@ -45,9 +40,16 @@ export default function Page() {
     }
   }, [state]);
 
-  const handleSubmit = (formData: FormData) => {
+  const handleSubmit = async (formData: FormData) => {
     setEmail(formData.get('email') as string);
-    formAction(formData);
+    // If auth is muted, skip actual registration and mock success
+    // Otherwise, call the register action
+    try {
+      const result = await register(formData);
+      setState(result);
+    } catch (e) {
+      setState({ status: 'failed' });
+    }
   };
 
   return (

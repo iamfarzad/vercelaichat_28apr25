@@ -4,7 +4,7 @@ import type { Attachment, UIMessage } from 'ai';
 import { useChat } from '@ai-sdk/react';
 import { useState } from 'react';
 import useSWR, { useSWRConfig } from 'swr';
-import { ChatHeader } from '@/components/chat-header';
+
 import type { Vote } from '@/lib/db/schema';
 import { fetcher, generateUUID } from '@/lib/utils';
 import { Artifact } from './artifact';
@@ -77,14 +77,6 @@ export function Chat({
   return (
     <>
       <div className="flex flex-col min-w-0 h-dvh bg-background">
-        <ChatHeader
-          chatId={id}
-          selectedModelId={selectedChatModel}
-          selectedVisibilityType={selectedVisibilityType}
-          isReadonly={isReadonly}
-          session={session}
-        />
-
         <Messages
           chatId={id}
           status={status}

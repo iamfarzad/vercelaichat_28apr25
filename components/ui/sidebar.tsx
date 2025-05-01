@@ -2,7 +2,7 @@
 
 import * as React from 'react';
 import { Slot } from '@radix-ui/react-slot';
-import { VariantProps, cva } from 'class-variance-authority';
+import { type VariantProps, cva } from 'class-variance-authority';
 import { PanelLeft } from 'lucide-react';
 
 import { useIsMobile } from '@/hooks/use-mobile';
@@ -195,7 +195,20 @@ const Sidebar = React.forwardRef<
           ref={ref}
           {...props}
         >
-          {children}
+          {/* Example canonical sidebar content. Replace or extend as needed. */}
+          {children ?? (
+            <>
+              <div className="p-4 font-bold text-lg border-b border-sidebar-border">
+                Sidebar
+              </div>
+              <div className="flex-1 p-4">
+                Add navigation, history, or other sidebar content here.
+              </div>
+              <div className="p-4 border-t border-sidebar-border text-xs text-muted-foreground">
+                Sidebar Footer
+              </div>
+            </>
+          )}
         </div>
       );
     }

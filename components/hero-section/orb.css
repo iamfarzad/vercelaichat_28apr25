@@ -1,0 +1,90 @@
+@keyframes orb-core {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.08); }
+}
+
+@keyframes orb-wave-slide {
+  0% { transform: translateX(-50%); }
+  100% { transform: translateX(0); }
+}
+
+@keyframes orb-core-color {
+  0%   { background-color: var(--orb-point-color, #ff7300); }
+  50%  { background-color: var(--accent-foreground, #222); }
+  100% { background-color: var(--orb-point-color, #ff7300); }
+}
+
+@keyframes orb-glow {
+  0%, 100% { opacity: 0.5; transform: scale(1); }
+  50% { opacity: 0.8; transform: scale(1.1); }
+}
+
+@keyframes orb-wave {
+  0% { transform: scale(1); opacity: 0.3; }
+  100% { transform: scale(1.6); opacity: 0; }
+}
+
+@keyframes orb-flicker {
+  from { opacity: 0.1; transform: scale(1); }
+  to   { opacity: 0.3; transform: scale(1.02); }
+}
+
+.animate-orb-core {
+  animation: orb-core 1.6s ease-in-out infinite, orb-core-color 8s linear infinite;
+}
+
+.animate-orb-glow {
+  animation: orb-glow 2.2s ease-in-out infinite;
+}
+
+.animate-orb-wave {
+  animation: orb-wave 2.8s ease-out infinite;
+}
+
+.animate-orb-wave-delay {
+  animation: orb-wave 2.8s ease-out infinite;
+  animation-delay: 1.4s;
+}
+
+.orb-flicker {
+  background: radial-gradient(circle at 50% 50%, rgba(255,255,255,0.2), transparent 70%);
+  opacity: 0.2;
+  animation: orb-flicker 0.3s infinite alternate;
+}
+
+.orb-core-disc {
+  background-color: var(--orb-point-color, #ff7300);
+}
+
+.orb-particles {
+  background-image: radial-gradient(circle, transparent 60%, var(--orb-point-color, #ff7300) 70%);
+  opacity: 0.1;
+}
+
+.orb-mesh {
+  background-image: linear-gradient(45deg, var(--orb-ring-color, #333) 25%, transparent 25%),
+                    linear-gradient(-45deg, var(--orb-ring-color, #333) 25%, transparent 25%);
+  background-size: 8px 8px;
+  opacity: 0.05;
+}
+
+.orb-wave {
+  position: absolute;
+  width: 300px;
+  height: 300px;
+  background: linear-gradient(45deg, var(--orb-point-color, #ff7300) 0%, rgba(255, 115, 0, 0.2) 100%);
+  filter: blur(30px);
+  border-radius: 40% 60% 70% 30% / 40% 50% 60% 50%;
+  overflow: hidden;
+  opacity: 0.3;
+  transform-origin: center;
+  animation: orb-wave-slide 10s linear infinite;
+  pointer-events: none;
+  z-index: -1;
+}
+
+.orb-parallax {
+  transform: perspective(800px) rotateX(var(--rotateX, 0deg)) rotateY(var(--rotateY, 0deg));
+  transition: transform 0.1s ease-out;
+  will-change: transform;
+}

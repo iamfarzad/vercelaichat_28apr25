@@ -1,6 +1,6 @@
 'use client';
 
-import { startTransition, useMemo, useOptimistic, useState } from 'react';
+import { startTransition, useMemo, useState } from 'react';
 
 import { saveChatModelAsCookie } from '@/app/(chat)/actions';
 import { Button } from '@/components/ui/button';
@@ -26,11 +26,18 @@ export function ModelSelector({
   selectedModelId: string;
 } & React.ComponentProps<typeof Button>) {
   const [open, setOpen] = useState(false);
-  const [optimisticModelId, setOptimisticModelId] =
-    useOptimistic(selectedModelId);
+  // For design work: Use regular state instead of useOptimistic
+  const [optimisticModelId, setOptimisticModelId] = useState(selectedModelId);
 
-  const userType = session.user.type;
-  const { availableChatModelIds } = entitlementsByUserType[userType];
+  // For design work: Add fallback when session or entitlements are incomplete
+  const userType = session?.user?.type || 'free';
+
+  // Use a fallback if entitlements are undefined
+  const entitlements = entitlementsByUserType[userType] || {
+    availableChatModelIds: ['grok-2-1212'], // Default to Grok for design work
+  };
+
+  const { availableChatModelIds } = entitlements;
 
   const availableChatModels = chatModels.filter((chatModel) =>
     availableChatModelIds.includes(chatModel.id),
