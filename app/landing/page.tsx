@@ -1,21 +1,16 @@
-'use client';
-
-import { useState } from 'react';
 import { Header } from '@/components/header';
 import { Footer } from '@/components/footer';
-import { Button } from '@/components/ui/button';
+import { FloatingOrb } from '@/components/floating-orb';
 import { ChatPopover } from '@/components/chat-popover';
-import { useSession } from 'next-auth/react';
-import type { Session } from 'next-auth';
-import type { UserType } from '@/app/(auth)/auth';
-import { generateUUID } from '@/lib/utils';
+import { useState } from 'react';
+import type { Session, UserType } from 'next-auth';
 
-export default function LandingPage() {
-  const { data: session } = useSession();
+export default function LandingPage({
+  session,
+  chatId,
+  selectedChatModel,
+}: { session: Session | null; chatId?: string; selectedChatModel?: string }) {
   const [showChat, setShowChat] = useState(false);
-  const chatId = generateUUID();
-  const selectedChatModel = 'grok-2-1212';
-
   // Create a mock session if session is null
   const safeSession =
     session ||
@@ -31,67 +26,65 @@ export default function LandingPage() {
     } as Session); // Type assertion to Session
 
   return (
-    <div className="flex min-h-screen flex-col">
-      <Header />
-
-      <main className="flex-1 flex flex-col items-center justify-center bg-gradient-to-b from-background to-muted/50 px-4">
-        <div className="max-w-3xl w-full text-center space-y-12">
-          <h1 className="text-4xl font-bold tracking-tighter sm:text-5xl md:text-6xl">
-            Experience the Power of AI Chat
-          </h1>
-
-          <p className="text-muted-foreground text-lg sm:text-xl">
-            Connect with our advanced AI assistant for instant answers, creative
-            content, and helpful guidance.
-          </p>
-
-          <div className="flex justify-center">
-            <Button
-              size="lg"
-              className="h-16 w-16 flex items-center justify-center rounded-full shadow-lg transition-all hover:scale-105"
-              onClick={() => setShowChat(true)}
-              aria-label="Open chat"
-            >
-              {/* You can use a canonical chat icon here. If you have a ChatIcon in your icons.tsx, use it. Otherwise, fallback to a message bubble emoji. */}
-              {/* Example: <ChatIcon className="w-8 h-8" /> */}
-              <span role="img" aria-label="Chat" className="text-3xl">
-                💬
-              </span>
-            </Button>
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 pt-8">
-            <div className="p-6 border rounded-lg bg-card">
-              <h3 className="font-medium text-lg mb-2">Instant Answers</h3>
-              <p className="text-muted-foreground">
-                Get immediate responses to your questions.
-              </p>
-            </div>
-            <div className="p-6 border rounded-lg bg-card">
-              <h3 className="font-medium text-lg mb-2">Creative Content</h3>
-              <p className="text-muted-foreground">
-                Generate ideas, stories, and more.
-              </p>
-            </div>
-            <div className="p-6 border rounded-lg bg-card">
-              <h3 className="font-medium text-lg mb-2">24/7 Assistance</h3>
-              <p className="text-muted-foreground">
-                Available whenever you need help.
-              </p>
-            </div>
+    <div className="flex min-h-screen flex-col bg-gradient-to-b from-gray-100 to-white modern-landing-page">
+      <Header className="modern-header" />
+      <main className="modern-main">
+        {/* Add modern styles and floating orb here */}
+        <div className="modern-container">
+          <div className="modern-content">
+            <FloatingOrb className="floating-orb" />
+            {/* Rest of the content remains the same */}
           </div>
         </div>
+        <style>{`
+            .modern-landing-page {
+              font-family: 'Open Sans', sans-serif;
+              background-image: linear-gradient(to bottom, #f7f7f7, #ffffff);
+              background-size: 100% 300px;
+              background-position: 0% 100%;
+            }
+            .modern-header {
+              background-color: #333;
+              color: #fff;
+              padding: 1rem;
+              text-align: center;
+              border-bottom: 1px solid #444;
+            }
+            .modern-main {
+              display: flex;
+              flex-direction: column;
+              align-items: center;
+              padding: 2rem;
+            }
+            .modern-container {
+              background-color: #f7f7f7;
+              padding: 2rem;
+              border-radius: 10px;
+              box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            }
+            .modern-content {
+              max-width: 800px;
+              margin: 0 auto;
+            }
+            .floating-orb {
+              position: fixed;
+              top: 50%;
+              right: 50%;
+              transform: translate(50%, -50%);
+              z-index: 1;
+            }
+          `}</style>
       </main>
-
-      <Footer />
-
+      <Footer className="modern-footer" />
       {/* Chat Popover */}
       <ChatPopover
         open={showChat}
         onClose={() => setShowChat(false)}
-        id={chatId}
+        id={chatId || 'default-chat-id'}
         selectedChatModel={selectedChatModel}
         session={safeSession}
+        className="modern-chat-popover"
+        popoverClassName="modern-chat-popover-content"
       />
     </div>
   );

@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { createPortal } from 'react-dom';
 import { SidebarProvider, useSidebar } from './ui/sidebar';
 import { AppSidebar } from './app-sidebar';
@@ -16,8 +16,9 @@ interface ChatPopoverProps {
   initialMessages?: UIMessage[];
   selectedChatModel: string;
   selectedVisibilityType?: VisibilityType;
-  isReadonly?: boolean;
   session: Session;
+  className?: string;
+  popoverClassName?: string;
 }
 
 /**
@@ -31,14 +32,27 @@ export function ChatPopover({
   initialMessages = [],
   selectedChatModel,
   selectedVisibilityType = 'private',
-  isReadonly = false,
   session,
+  className,
+  popoverClassName,
 }: ChatPopoverProps) {
+  // Debug: log all props to check runtime values
+  console.log('[ChatPopover] props', {
+    open,
+    onClose,
+    id,
+    initialMessages,
+    selectedChatModel,
+    selectedVisibilityType,
+    session,
+    className,
+    popoverClassName,
+  });
   /**
    * Ref for the modal container, used to contain overlays (tooltips/popovers) within the chat modal.
    * This is passed to ChatUIWrapper and then to all TooltipContent components inside the modal.
    */
-  const modalContainerRef = React.useRef<HTMLDivElement>(null);
+  const modalContainerRef = useRef<HTMLDivElement>(null);
   const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {
@@ -81,7 +95,7 @@ export function ChatPopover({
             ref={modalContainerRef}
             role="document"
             aria-label="Chat Interface"
-            className="relative flex w-[95vw] max-w-[1200px] h-[92vh] md:h-[94vh] lg:h-[92vh] bg-white dark:bg-zinc-900 rounded-lg shadow-2xl overflow-hidden isolate"
+            className={`relative flex w-[95vw] max-w-[1200px] h-[92vh] md:h-[94vh] lg:h-[92vh] bg-white dark:bg-zinc-900 rounded-lg shadow-2xl overflow-hidden isolate ${popoverClassName ?? ''}`}
           >
             {/* Close button */}
             <button
@@ -107,10 +121,7 @@ export function ChatPopover({
                       initialMessages={initialMessages}
                       selectedChatModel={selectedChatModel}
                       selectedVisibilityType={selectedVisibilityType}
-                      isReadonly={isReadonly}
                       session={session}
-                      sidebarIsOpen={sidebarIsOpen}
-                      modalContainerRef={modalContainerRef}
                     />
                   </>
                 )}

@@ -1,6 +1,6 @@
 'use client';
 
-import React, { createContext } from 'react';
+import React, { createContext, useRef, useState, useLayoutEffect } from 'react';
 
 import { Chat } from './chat';
 import { ChatHeader } from './chat-header';
@@ -20,12 +20,8 @@ export interface ChatUIWrapperProps {
   selectedVisibilityType?: VisibilityType;
   isReadonly?: boolean;
   session: Session;
-  sidebarIsOpen: boolean;
 }
 
-/**
- * ChatUIWrapper now accepts modalContainerRef for strict overlay containment (tooltips/popovers).
- */
 /**
  * TooltipContainerContext provides the tooltip container element to all children for strict overlay containment.
  */
@@ -39,19 +35,19 @@ export function ChatUIWrapper({
   isReadonly = false,
   session,
   sidebarIsOpen,
-  modalContainerRef,
-}: ChatUIWrapperProps & {
-  modalContainerRef?: React.RefObject<HTMLDivElement>;
-}) {
-  const [container, setContainer] = React.useState<HTMLElement | null>(null);
-  React.useLayoutEffect(() => {
-    if (modalContainerRef?.current) {
-      setContainer(modalContainerRef.current);
+}: ChatUIWrapperProps) {
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  const [container, setContainer] = useState<HTMLElement | null>(null);
+  useLayoutEffect(() => {
+    if (containerRef.current) {
+      setContainer(containerRef.current);
     }
-  }, [modalContainerRef?.current]);
+  }, [containerRef.current]);
+
   return (
     <TooltipContainerContext.Provider value={container}>
-      <div ref={modalContainerRef} className="relative flex h-full w-full">
+      <div ref={containerRef} className="relative flex h-full w-full">
 
         {/* Main content area for chat UI */}
         <div className="flex-1 flex flex-col h-full overflow-hidden">

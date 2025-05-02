@@ -1,13 +1,17 @@
 'use client';
 
+import { GlowingOrb } from './hero-section/orb';
+import { FloatingOrb } from './floating-orb';
+import './hero-section/orb.css';
+import { cn } from '@/lib/utils';
+import { AnimatedGridPattern } from '@/components/ui/animated-grid-pattern';
+
 interface HeroSectionProps {
   title: string;
   description: string;
   buttonText: string;
   onButtonClick: (initialMessage?: string) => void;
 }
-
-import { Orb3D } from './hero-section/orb3D';
 
 export function HeroSection({
   title,
@@ -16,14 +20,26 @@ export function HeroSection({
   onButtonClick,
 }: HeroSectionProps) {
   return (
-    <div className="max-w-3xl w-full mx-auto flex flex-col items-center">
+    <div className="relative max-w-3xl w-full mx-auto flex flex-col items-center">
+      {/* Animated grid pattern background */}
+      <AnimatedGridPattern
+        numSquares={30}
+        maxOpacity={0.1}
+        duration={3}
+        repeatDelay={1}
+        className={cn(
+          'pointer-events-none absolute inset-0 -z-10 [mask-image:radial-gradient(500px_circle_at_center,white,transparent)] h-full w-full skew-y-12',
+        )}
+      />
+      {/* Main content */}
       <h1 className="text-4xl font-bold tracking-tighter sm:text-5xl md:text-6xl mt-8 mb-4">
         {title}
       </h1>
       <p className="text-muted-foreground text-lg sm:text-xl mb-8">
         {description}
       </p>
-      <Orb3D className="w-24 h-24 mx-auto mb-10" />
+      <GlowingOrb className="w-24 h-24 mx-auto mb-10" />
+      <FloatingOrb />
       <div className="flex items-center justify-center max-w-md w-full bg-zinc-800 rounded-full px-4 py-2 shadow-inner text-white mb-6">
         <input
           id="askbar-input"
