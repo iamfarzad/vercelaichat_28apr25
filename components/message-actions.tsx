@@ -12,12 +12,25 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from './ui/tooltip';
-import { memo } from 'react';
-import { useCopyToClipboard } from 'react-copy-to-clipboard';
+import { memo, useState } from 'react';
 import equal from 'fast-deep-equal';
 import { toast } from 'sonner';
 import { motion } from 'framer-motion';
 import { cn } from '@/lib/utils';
+
+function useCopyToClipboard() {
+  const [isCopied, setIsCopied] = useState(false);
+  const copy = async (text: string) => {
+    try {
+      await navigator.clipboard.writeText(text);
+      setIsCopied(true);
+      setTimeout(() => setIsCopied(false), 1500);
+    } catch (e) {
+      setIsCopied(false);
+    }
+  };
+  return [isCopied, copy] as const;
+}
 
 export function PureMessageActions({
   chatId,
