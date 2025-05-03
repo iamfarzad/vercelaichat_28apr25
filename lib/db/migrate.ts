@@ -10,6 +10,12 @@ const runMigrate = async () => {
     throw new Error('POSTGRES_URL is not defined');
   }
 
+  try {
+    new URL(process.env.POSTGRES_URL);
+  } catch (err) {
+    throw new Error('Invalid POSTGRES_URL');
+  }
+
   const connection = postgres(process.env.POSTGRES_URL, { max: 1 });
   const db = drizzle(connection);
 
