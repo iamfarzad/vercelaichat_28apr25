@@ -17,7 +17,6 @@ import { useLocalStorage, useWindowSize } from 'usehooks-ts';
 import { ArrowUpIcon, PaperclipIcon, StopIcon } from './icons';
 import { PreviewAttachment } from './preview-attachment';
 import { Button } from './ui/button';
-import { ShimmerButton } from 'magic-ui';
 import { Textarea } from './ui/textarea';
 import { SuggestedActions } from './suggested-actions';
 import equal from 'fast-deep-equal';
@@ -237,10 +236,10 @@ export function PureMultimodalInput({
           <PaperclipIcon className="h-4 w-4" />
         </Button>
 
-        <ShimmerButton
+        <Button
           className="h-fit py-2 px-3"
           disabled={status === 'streaming' || !input.trim()}
-          onClick={handleSubmit}
+          onClick={() => handleSubmit()}
           aria-label={status === 'streaming' ? 'Stop' : 'Send'}
         >
           {status === 'streaming' ? (
@@ -248,7 +247,7 @@ export function PureMultimodalInput({
           ) : (
             <ArrowUpIcon className="h-4 w-4" />
           )}
-        </ShimmerButton>
+        </Button>
       </div>
 
       <AnimatePresence>
@@ -375,7 +374,7 @@ function PureSendButton({
   uploadQueue: Array<string>;
 }) {
   return (
-    <ShimmerButton
+    <Button
       data-testid="send-button"
       className="rounded-full p-1.5 h-fit border dark:border-zinc-600"
       onClick={(event) => {
@@ -386,7 +385,7 @@ function PureSendButton({
       aria-label="Send"
     >
       <ArrowUpIcon size={14} />
-    </ShimmerButton>
+    </Button>
   );
 }
 
