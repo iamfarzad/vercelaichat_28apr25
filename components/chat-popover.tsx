@@ -7,8 +7,7 @@ import { AppSidebar } from './app-sidebar';
 import { ChatUIWrapper } from './chat-ui-wrapper';
 import { X, PanelLeftIcon } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { AnimatedGridPattern } from 'magic-ui';
-import { ShimmerButton } from 'magic-ui';
+import { Button } from './ui/button';
 import type { Session } from 'next-auth';
 import type { UIMessage } from 'ai';
 import type { VisibilityType } from './visibility-selector';
@@ -74,7 +73,7 @@ export function ChatPopover({
         onClick={(e) => e.target === e.currentTarget && onClose()}
       >
         {/* Animated subtle grid background */}
-        <AnimatedGridPattern className="absolute inset-0 z-0 opacity-10 pointer-events-none" />
+        <div className="absolute inset-0 z-0 opacity-10 pointer-events-none" />
         <div
           ref={modalRef}
           role="document"
@@ -85,13 +84,13 @@ export function ChatPopover({
             popoverClassName,
           )}
         >
-          <ShimmerButton
+          <Button
             onClick={onClose}
             className="absolute top-3 right-3 z-50 size-9 rounded-full bg-background/80 backdrop-blur-sm border border-border"
             aria-label="Close chat dialog"
           >
             <X className="size-4" />
-          </ShimmerButton>
+          </Button>
 
           <ChatContent
             id={id}

@@ -11,12 +11,12 @@ const runMigrate = async () => {
     throw new Error('POSTGRES_URL is not defined. Please set it in your environment variables.');
   }
 
-  // Improved PostgreSQL URL validation (allows query params)
-  const pgUrlPattern = /^postgres(?:ql)?:\/\/[^:]+:[^@]+@[^:]+:\d+\/[^\s]+/;
+  // Relaxed PostgreSQL URL validation (allows optional port and query params)
+  const pgUrlPattern = /^postgres(?:ql)?:\/\/[^:]+:[^@]+@[^/]+\/[^\s]+/;
   if (!pgUrlPattern.test(url)) {
     throw new Error(
       `POSTGRES_URL is invalid: "${url}"
-Expected format: postgres://user:password@host:port/database[?params]
+Expected format: postgres://user:password@host[:port]/database[?params]
 Check for typos, missing credentials, or unsupported URL schemes.`
     );
   }
