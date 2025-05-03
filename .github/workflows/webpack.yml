@@ -2,9 +2,9 @@ name: NodeJS with Webpack
 
 on:
   push:
-    branches: ["main"]
+    branches:
+      - main
   pull_request:
-    branches: ["main"]
 
 jobs:
   build:
@@ -15,18 +15,34 @@ jobs:
         node-version: [18.x, 20.x]
 
     steps:
-      - uses: actions/checkout@v4
+    - name: Checkout code
+      uses: actions/checkout@v4
 
-      - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v4
-        with:
-          node-version: ${{ matrix.node-version }}
-          cache: 'pnpm'
-          cache-dependency-path: 'pnpm-lock.yaml'
-          package-manager: 'pnpm'
+    - name: Restore pnpm cache
+      uses: actions/cache@v4
+      with:
+        path: ~/.pnpm-store
+        key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+        restore-keys: |
+          ${{ runner.os }}-pnpm-store-
 
-      - name: Install dependencies
-        run: pnpm install
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ matrix.node-version }}
+        cache: 'pnpm'
+        cache-dependency-path: 'pnpm-lock.yaml'
+        package-manager: 'pnpm'
 
-      - name: Build
-        run: pnpm run build
+    - name: Install dependencies
+      run: pnpm install
+
+    - name: Build
+      run: pnpm run build
+
+    - name: Save pnpm cache
+      if: github.event_name != 'pull_request'
+      uses: actions/cache@v4
+      with:
+        path: ~/.pnpm-store
+        key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
