@@ -1,8 +1,6 @@
 'use client';
 
 import type { Attachment, UIMessage } from 'ai';
-import cx from 'classnames';
-import type React from 'react';
 import {
   useRef,
   useEffect,
@@ -23,11 +21,14 @@ import { Textarea } from './ui/textarea';
 import { SuggestedActions } from './suggested-actions';
 import equal from 'fast-deep-equal';
 import type { UseChatHelpers } from '@ai-sdk/react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { cn } from '@/lib/utils';
 
-function PureMultimodalInput({
+export function PureMultimodalInput({
   chatId,
   input,
   setInput,
+  handleSubmit,
   status,
   stop,
   attachments,
@@ -35,30 +36,31 @@ function PureMultimodalInput({
   messages,
   setMessages,
   append,
-  handleSubmit,
   className,
 }: {
   chatId: string;
-  input: UseChatHelpers['input'];
-  setInput: UseChatHelpers['setInput'];
-  status: UseChatHelpers['status'];
+  input: string;
+  setInput: Dispatch<SetStateAction<string>>;
+  handleSubmit: (event?: React.FormEvent<HTMLFormElement>) => void;
+  status: 'ready' | 'submitted' | 'streaming' | 'error';
   stop: () => void;
   attachments: Array<Attachment>;
   setAttachments: Dispatch<SetStateAction<Array<Attachment>>>;
   messages: Array<UIMessage>;
   setMessages: UseChatHelpers['setMessages'];
   append: UseChatHelpers['append'];
-  handleSubmit: UseChatHelpers['handleSubmit'];
   className?: string;
 }) {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const { width } = useWindowSize();
+  const [isFocused, setIsFocused] = useState(false);
+  const [showSuggestions, setShowSuggestions] = useState(false);
 
   useEffect(() => {
     if (textareaRef.current) {
       adjustHeight();
     }
-  }, []);
+  }, [isFocused, input]);
 
   const adjustHeight = () => {
     if (textareaRef.current) {
@@ -98,6 +100,11 @@ function PureMultimodalInput({
   const handleInput = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
     setInput(event.target.value);
     adjustHeight();
+    if (event.target.value) {
+      setShowSuggestions(true);
+    } else {
+      setShowSuggestions(false);
+    }
   };
 
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -180,89 +187,119 @@ function PureMultimodalInput({
   );
 
   return (
-    <div className="relative w-full flex flex-col gap-4">
-      {messages.length === 0 &&
-        attachments.length === 0 &&
-        uploadQueue.length === 0 && (
-          <SuggestedActions append={append} chatId={chatId} />
-        )}
-
-      <input
-        type="file"
-        className="fixed -top-4 -left-4 size-0.5 opacity-0 pointer-events-none"
-        ref={fileInputRef}
-        multiple
-        onChange={handleFileChange}
-        tabIndex={-1}
-      />
-
-      {(attachments.length > 0 || uploadQueue.length > 0) && (
-        <div
-          data-testid="attachments-preview"
-          className="flex flex-row gap-2 overflow-x-scroll items-end"
-        >
-          {attachments.map((attachment) => (
-            <PreviewAttachment key={attachment.url} attachment={attachment} />
-          ))}
-
-          {uploadQueue.map((filename) => (
-            <PreviewAttachment
-              key={filename}
-              attachment={{
-                url: '',
-                name: filename,
-                contentType: '',
-              }}
-              isUploading={true}
-            />
-          ))}
-        </div>
-      )}
-
-      <Textarea
-        data-testid="multimodal-input"
-        ref={textareaRef}
-        placeholder="Send a message..."
-        value={input}
-        onChange={handleInput}
-        className={cx(
-          'min-h-[60px] max-h-[calc(50vh)] overflow-y-auto resize-none rounded-2xl !text-base bg-muted pb-10 dark:border-zinc-700',
-          className,
-        )}
-        rows={2}
-        autoFocus
-        onKeyDown={(event) => {
-          if (
-            event.key === 'Enter' &&
-            !event.shiftKey &&
-            !event.nativeEvent.isComposing
-          ) {
-            event.preventDefault();
-
-            if (status !== 'ready') {
-              toast.error('Please wait for the model to finish its response!');
-            } else {
-              submitForm();
+    <div className={cn('flex flex-col gap-2 p-4', className)}>
+      <div className="flex flex-row gap-2">
+        <Textarea
+          data-testid="chat-input"
+          ref={textareaRef}
+          className="flex-1 resize-none bg-transparent outline-none"
+          placeholder="Send a message..."
+          value={input}
+          onChange={handleInput}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter' && !e.shiftKey) {
+              e.preventDefault();
+              handleSubmit();
             }
-          }
-        }}
-      />
+          }}
+          onFocus={() => setIsFocused(true)}
+          onBlur={() => setIsFocused(false)}
+        />
 
-      <div className="absolute bottom-0 p-2 w-fit flex flex-row justify-start">
-        <AttachmentsButton fileInputRef={fileInputRef} status={status} />
+        <Button
+          variant="outline"
+          className="h-fit py-2 px-3"
+          onClick={() => {
+            const inputElement = document.createElement('input');
+            inputElement.type = 'file';
+            inputElement.accept = 'image/*,video/*,audio/*,application/pdf';
+            inputElement.multiple = true;
+
+            inputElement.addEventListener('change', (event) => {
+              const files = (event.target as HTMLInputElement).files;
+              if (!files) return;
+
+              const newAttachments = Array.from(files).map((file) => ({
+                id: crypto.randomUUID(),
+                type: file.type,
+                name: file.name,
+                size: file.size,
+                url: URL.createObjectURL(file),
+              }));
+
+              setAttachments((prev) => [...prev, ...newAttachments]);
+            });
+
+            inputElement.click();
+          }}
+        >
+          <PaperclipIcon className="h-4 w-4" />
+        </Button>
+
+        <Button
+          variant="default"
+          className="h-fit py-2 px-3"
+          disabled={status === 'streaming' || !input.trim()}
+          onClick={handleSubmit}
+        >
+          {status === 'streaming' ? (
+            <StopIcon className="h-4 w-4" />
+          ) : (
+            <ArrowUpIcon className="h-4 w-4" />
+          )}
+        </Button>
       </div>
 
-      <div className="absolute bottom-0 right-0 p-2 w-fit flex flex-row justify-end">
-        {status === 'submitted' ? (
-          <StopButton stop={stop} setMessages={setMessages} />
-        ) : (
-          <SendButton
-            input={input}
-            submitForm={submitForm}
-            uploadQueue={uploadQueue}
-          />
+      <AnimatePresence>
+        {attachments.length > 0 && (
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 10 }}
+            transition={{ duration: 0.2 }}
+            className="flex flex-row gap-2"
+          >
+            {attachments.map((attachment) => (
+              <PreviewAttachment
+                key={attachment.id}
+                attachment={attachment}
+                onRemove={() => {
+                  setAttachments((prev) =>
+                    prev.filter((a) => a.id !== attachment.id),
+                  );
+                }}
+              />
+            ))}
+          </motion.div>
         )}
-      </div>
+      </AnimatePresence>
+
+      <AnimatePresence>
+        {showSuggestions && (
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 10 }}
+            transition={{ duration: 0.2 }}
+          >
+            <SuggestedActions
+              chatId={chatId}
+              messages={messages}
+              setMessages={setMessages}
+              append={append}
+              onSubmit={(action) => {
+                setInput(action.content);
+                handleSubmit();
+              }}
+            />
+          </motion.div>
+        )}
+      </AnimatePresence>
+      <SendButton
+        input={input}
+        submitForm={submitForm}
+        uploadQueue={uploadQueue}
+      />
     </div>
   );
 }

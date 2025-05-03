@@ -3,15 +3,18 @@
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useWindowSize } from 'usehooks-ts';
+import { motion } from 'framer-motion';
 
 import { ModelSelector } from '@/components/model-selector';
 import { Button } from '@/components/ui/button';
-import { PlusIcon, VercelIcon } from './icons';
-import { memo, useContext } from 'react';
+import { PlusIcon, VercelIcon, MenuIcon } from './icons';
+import { memo, useContext, useEffect, useState } from 'react';
 import { Tooltip, TooltipContent, TooltipTrigger } from './ui/tooltip';
 import { TooltipContainerContext } from './chat-ui-wrapper';
 import { type VisibilityType, VisibilitySelector } from './visibility-selector';
+import { useSidebar } from './ui/sidebar';
 import type { Session } from 'next-auth';
+import { cn } from '@/lib/utils';
 
 function PureChatHeader({
   chatId,
@@ -28,11 +31,44 @@ function PureChatHeader({
 }) {
   const router = useRouter();
   const tooltipContainer = useContext(TooltipContainerContext);
-
+  const { toggleSidebar } = useSidebar();
   const { width: windowWidth } = useWindowSize();
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobileMenuOpen(false);
+    };
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   return (
-    <header className="flex top-0 bg-background py-1.5 items-center px-2 md:px-2 gap-2 overflow-visible sticky z-10">
+    <header
+      className="flex top-0 bg-background py-1.5 items-center px-2 md:px-2 gap-2 overflow-visible sticky z-10 w-full"
+      data-testid="chat-header"
+    >
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <Button
+            variant="ghost"
+            size="icon"
+            className="h-9 w-9 md:mr-1"
+            onClick={toggleSidebar}
+            data-testid="sidebar-toggle-button"
+          >
+            <MenuIcon />
+            <span className="sr-only">Toggle sidebar</span>
+          </Button>
+        </TooltipTrigger>
+        <TooltipContent
+          side="bottom"
+          collisionPadding={8}
+          container={tooltipContainer}
+        >
+          Toggle sidebar
+        </TooltipContent>
+      </Tooltip>
 
       {windowWidth < 768 && (
         <Tooltip>

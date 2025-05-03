@@ -1,29 +1,64 @@
 'use client';
 
-import { GlowingOrb } from './orb';
+import { useState } from 'react';
+import { motion } from 'framer-motion';
+import { EnhancedOrb } from './enhanced-orb';
 import { AskBar } from './ask-bar';
-import { CTAButton } from './cta-button';
+import { ModernButton } from '@/components/ui/modern-button';
 
-export interface HeroSectionProps {
-  onSend: (value: string) => void;
+interface HeroSectionProps {
+  title: string;
+  description: string;
+  buttonText: string;
+  onButtonClick: (message?: string) => void;
 }
 
-export function HeroSection({ onSend }: HeroSectionProps) {
+export function HeroSection({
+  title,
+  description,
+  buttonText,
+  onButtonClick,
+}: HeroSectionProps) {
+  const [askInput, setAskInput] = useState('');
+
+  const handleAskSubmit = (value: string) => {
+    onButtonClick(value);
+  };
+
   return (
-    <section className="flex flex-col items-center justify-center text-center py-24 px-6 sm:px-8 md:px-12">
-      <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold tracking-tight text-white max-w-4xl mx-auto">
-        AI consulting for founders and teams who can’t afford to guess
-      </h1>
-      <p className="mt-6 text-lg sm:text-xl text-zinc-300 max-w-2xl mx-auto">
-        Get clarity on what AI can do for your business with expert guidance.
-      </p>
-      <GlowingOrb className="w-24 h-24 my-4 mx-auto" />
-      <div className="w-full flex justify-center">
-        <AskBar onSend={onSend} />
+    <div className="w-full max-w-5xl mx-auto px-4 py-24 md:py-32 flex flex-col items-center">
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6 }}
+        className="text-center"
+      >
+        <div className="inline-flex items-center gap-2 px-3 py-1 mb-6 rounded-full bg-muted/50 border border-border text-xs font-medium">
+          <span className="w-2 h-2 rounded-full bg-brand-orange"></span>
+          <span>AI-Powered Wellness</span>
+        </div>
+
+        <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 bg-gradient-to-b from-foreground to-muted-foreground bg-clip-text text-transparent">
+          {title}
+        </h1>
+
+        <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto mb-8">
+          {description}
+        </p>
+
+        <div className="flex flex-col items-center gap-6">
+          <ModernButton onClick={() => onButtonClick()} variant="primary">
+            {buttonText}
+          </ModernButton>
+        </div>
+      </motion.div>
+
+      <div className="relative w-full mt-12 mb-8">
+        <EnhancedOrb className="mx-auto" />
+        <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-full max-w-md">
+          <AskBar onSend={handleAskSubmit} />
+        </div>
       </div>
-      <div className="w-full flex justify-center">
-        <CTAButton className="mt-6" />
-      </div>
-    </section>
+    </div>
   );
 }

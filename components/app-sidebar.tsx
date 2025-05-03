@@ -23,8 +23,8 @@ export function AppSidebar({ user }: { user: User | undefined }) {
   const { setOpenMobile } = useSidebar();
 
   return (
-    <Sidebar className="group-data-[side=left]:border-r-0">
-      <SidebarHeader>
+    <Sidebar className="group-data-[side=left]:border-r-0 bg-zinc-50 dark:bg-zinc-900">
+      <SidebarHeader className="px-3 py-2">
         <SidebarMenu>
           <div className="flex flex-row justify-between items-center">
             <Link
@@ -32,7 +32,7 @@ export function AppSidebar({ user }: { user: User | undefined }) {
               onClick={() => {
                 setOpenMobile(false);
               }}
-              className="flex flex-row gap-3 items-center"
+              className="flex flex-row gap-2 items-center"
             >
               <span className="text-lg font-semibold px-2 hover:bg-muted rounded-md cursor-pointer">
                 Chatbot
@@ -58,10 +58,17 @@ export function AppSidebar({ user }: { user: User | undefined }) {
           </div>
         </SidebarMenu>
       </SidebarHeader>
-      <SidebarContent>
+
+      <SidebarContent className="px-2">
+        <div className="text-sm text-muted-foreground px-3 py-2">
+          Your conversations will appear here once you start chatting!
+        </div>
         <SidebarHistory user={user} />
       </SidebarContent>
-      <SidebarFooter>{user && <SidebarUserNav user={user} />}</SidebarFooter>
+
+      <SidebarFooter className="mt-auto">
+        {user && <SidebarUserNav user={user} />}
+      </SidebarFooter>
     </Sidebar>
   );
 }

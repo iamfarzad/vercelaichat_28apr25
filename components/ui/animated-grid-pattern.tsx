@@ -16,39 +16,42 @@ export function AnimatedGridPattern({
   repeatDelay?: number;
   className?: string;
 }) {
-  console.log('[AnimatedGridPattern] props', {
-    numSquares,
-    maxOpacity,
-    duration,
-    repeatDelay,
-    className,
-  });
+  // Remove console.log in production code
+  const id = useId();
 
-  // Example implementation: renders animated squares in a grid
+  // Use Framer Motion for better animation performance
   const squares = Array.from({ length: numSquares }, (_, i) => (
-    <div
-      key={i}
+    <motion.div
+      key={`${id}-square-${
+        // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
+        i
+      }`}
       className="absolute bg-white/10 rounded"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: maxOpacity }}
+      transition={{
+        duration,
+        repeat: Number.POSITIVE_INFINITY,
+        repeatType: 'reverse',
+        delay: i * repeatDelay,
+      }}
       style={{
         left: `${(i % 5) * 20}%`,
         top: `${Math.floor(i / 5) * 20}%`,
         width: '18%',
         height: '18%',
-        opacity: maxOpacity,
-        animation: `fadeInOut ${duration}s ease-in-out ${i * repeatDelay}s infinite alternate`,
       }}
     />
   ));
 
   return (
-    <div className={`absolute inset-0 w-full h-full pointer-events-none ${className}`}>
+    <div
+      className={cn(
+        'absolute inset-0 w-full h-full pointer-events-none',
+        className,
+      )}
+    >
       {squares}
-      <style>{`
-        @keyframes fadeInOut {
-          0% { opacity: 0; }
-          100% { opacity: ${maxOpacity}; }
-        }
-      `}</style>
     </div>
   );
 }

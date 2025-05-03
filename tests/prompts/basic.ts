@@ -139,3 +139,16 @@ export const TEST_PROMPTS: Record<string, CoreMessage> = {
     ],
   },
 };
+// Minimal mock for test compatibility
+export function getResponseChunksByPrompt(prompt: any, reasoning?: boolean) {
+  return [
+    { type: "text-delta" as const, textDelta: reasoning ? "Reasoned response" : "Mock response" },
+    {
+      type: "finish" as const,
+      finishReason: "stop" as const,
+      usage: { completionTokens: 1, promptTokens: 1 },
+      logprobs: undefined,
+      providerMetadata: undefined
+    }
+  ];
+}

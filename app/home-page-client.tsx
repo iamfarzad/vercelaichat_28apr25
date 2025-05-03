@@ -1,11 +1,20 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, memo } from 'react';
 import { Header } from '@/components/header';
 import { Footer } from '@/components/footer';
 import { ChatPopover } from '@/components/chat-popover';
+import { ThemeProvider } from '@/temp-next/components/theme-provider';
 import { generateUUID } from '@/lib/utils';
+import { AnimatedGridPattern } from '@/components/ui/animated-grid-pattern';
 import { HeroSection } from '@/components/hero-section';
+import { ServicesSection } from '@/components/services-section';
+import { WhyStartSection } from '@/components/why-start-section';
+import { FearsAndSolutionsSection } from '@/components/fears-and-solutions-section';
+import { ImplementationStepsSection } from '@/components/implementation-steps-section';
+import { RisksSection } from '@/components/risks-section';
+import { CtaSection } from '@/components/cta-section';
+import { ContactSection } from '@/components/contact-section';
 import type { Session } from 'next-auth';
 
 interface HomePageClientProps {
@@ -34,50 +43,41 @@ export default function HomePageClient({
   const chatId = initialChatId || generateUUID();
 
   return (
-    <div className="flex min-h-screen flex-col">
-      <Header />
+    <ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
+      <div className="flex min-h-screen flex-col">
+        <Header />
 
-      <main className="flex-1 flex flex-col items-center justify-center bg-gradient-to-b from-background to-muted/50 px-4">
-        <HeroSection
-          title="AI consulting for founders and teams who can’t afford to guess"
-          description="Get clarity on what AI can do for your business with expert guidance."
-          buttonText="Click to Chat"
-          onButtonClick={handleChatLaunch}
-        />
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 pt-8 max-w-3xl w-full mx-auto">
-          <div className="p-6 border rounded-lg bg-card">
-            <h3 className="font-medium text-lg mb-2">Instant Answers</h3>
-            <p className="text-muted-foreground">
-              Get immediate responses to your questions.
-            </p>
-          </div>
-          <div className="p-6 border rounded-lg bg-card">
-            <h3 className="font-medium text-lg mb-2">Creative Content</h3>
-            <p className="text-muted-foreground">
-              Generate ideas, stories, and more.
-            </p>
-          </div>
-          <div className="p-6 border rounded-lg bg-card">
-            <h3 className="font-medium text-lg mb-2">24/7 Assistance</h3>
-            <p className="text-muted-foreground">
-              Available whenever you need help.
-            </p>
-          </div>
-        </div>
-      </main>
+        <main className="flex-1 flex flex-col items-center justify-center bg-gradient-to-b from-background to-muted/30 px-4">
+          <HeroSection
+            title="What your company needs to get started with AI"
+            description="AI should be simple, not complicated. We help you start the right way and master AI in daily work—employees and leaders alike."
+            buttonText="Book Free Call"
+            onButtonClick={handleChatLaunch}
+          />
 
-      <Footer />
+          <ServicesSection />
+          <WhyStartSection />
+          <FearsAndSolutionsSection />
+          <ImplementationStepsSection />
+          <RisksSection />
+          <CtaSection onButtonClick={handleChatLaunch} />
+          <ContactSection />
+        </main>
 
-      {showChat && (
-        <ChatPopover
-          open={showChat}
-          onClose={() => setShowChat(false)}
-          id={chatId}
-          session={session}
-          selectedChatModel={selectedChatModel}
-          initialMessages={initialMessages}
-        />
-      )}
-    </div>
+        <Footer />
+
+        {showChat && (
+          <ChatPopover
+            open={showChat}
+            onClose={() => setShowChat(false)}
+            id={chatId}
+            session={session}
+            selectedChatModel={selectedChatModel}
+            initialMessages={initialMessages}
+            popoverClassName="bg-background/95 backdrop-blur-md"
+          />
+        )}
+      </div>
+    </ThemeProvider>
   );
 }

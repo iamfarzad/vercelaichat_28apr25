@@ -1,93 +1,52 @@
 'use client';
 
 import Link from 'next/link';
-import { useTheme } from 'next-themes';
-import { Button } from './ui/button';
-
-import { MoonIcon, SunIcon } from '@radix-ui/react-icons';
-import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
-import { Menu } from 'lucide-react';
+import { ThemeToggle } from '../temp-next/components/theme-toggle';
+import SearchBar from './search-bar';
 
 export function Header() {
-  const { theme, setTheme } = useTheme();
-
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <div className="container flex h-14 max-w-screen-2xl items-center">
-        <div className="mr-4 flex">
-          <Link href="/" className="flex items-center space-x-2">
-            <span className="font-bold text-xl">YourBrand</span>
+    <header className="fixed top-0 left-0 right-0 z-50 backdrop-blur-md bg-background/95 border-b border-border">
+      <div className="container flex justify-between items-center h-16 px-4">
+        <Link href="/" className="flex items-center gap-2">
+          <span className="relative">
+            <span className="absolute w-2 h-2 rounded-full bg-brand-orange"></span>
+          </span>
+          <span className="font-bold text-xl bg-gradient-to-r from-[oklch(var(--brand-orange))] to-[oklch(var(--brand-orange)/0.8)] bg-clip-text text-transparent">
+            F.B Consulting
+          </span>
+        </Link>
+
+        <div className="hidden md:flex items-center gap-6">
+          <Link
+            href="/"
+            className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+          >
+            Home
+          </Link>
+          <Link
+            href="/services"
+            className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+          >
+            Services
+          </Link>
+          <Link
+            href="#about"
+            className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+          >
+            About
+          </Link>
+          <Link
+            href="#contact"
+            className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+          >
+            Contact
           </Link>
         </div>
-        <div className="flex flex-1 items-center justify-between space-x-2 md:justify-end">
-          {/* Desktop Navigation - Hidden on mobile */}
-          <nav className="hidden md:flex items-center">
-            <Link href="/" className="px-4 py-2 text-sm font-medium">
-              Home
-            </Link>
-            <Link href="/about" className="px-4 py-2 text-sm font-medium">
-              About
-            </Link>
-            <Link href="/features" className="px-4 py-2 text-sm font-medium">
-              Features
-            </Link>
-          </nav>
 
-          {/* Mobile Navigation */}
-          <div className="md:hidden">
-            <Sheet>
-              <SheetTrigger asChild>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="h-9 w-9 min-h-[44px] min-w-[44px]"
-                  aria-label="Menu"
-                >
-                  <Menu className="h-5 w-5" />
-                </Button>
-              </SheetTrigger>
-              <SheetContent side="left" className="w-[250px] sm:w-[300px]">
-                <nav className="flex flex-col space-y-4 mt-6">
-                  <Link
-                    href="/"
-                    className="px-2 py-4 text-base font-medium border-b border-border/40"
-                  >
-                    Home
-                  </Link>
-                  <Link
-                    href="/about"
-                    className="px-2 py-4 text-base font-medium border-b border-border/40"
-                  >
-                    About
-                  </Link>
-                  <Link
-                    href="/features"
-                    className="px-2 py-4 text-base font-medium border-b border-border/40"
-                  >
-                    Features
-                  </Link>
-                </nav>
-              </SheetContent>
-            </Sheet>
-          </div>
-          <div className="flex items-center space-x-1">
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-              className="h-9 w-9"
-              aria-label="Toggle theme"
-            >
-              {theme === 'dark' ? (
-                <SunIcon className="h-4 w-4" />
-              ) : (
-                <MoonIcon className="h-4 w-4" />
-              )}
-            </Button>
-            <Button variant="outline" size="sm">
-              Sign In
-            </Button>
-          </div>
+        <div className="flex items-center gap-4">
+          <SearchBar />
+          <ThemeToggle />
         </div>
       </div>
     </header>

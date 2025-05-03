@@ -1,9 +1,9 @@
+'use client';
+
 import type { Message } from 'ai';
 import { useSWRConfig } from 'swr';
-import { useCopyToClipboard } from 'usehooks-ts';
 
 import type { Vote } from '@/lib/db/schema';
-
 import { CopyIcon, ThumbDownIcon, ThumbUpIcon } from './icons';
 import { Button } from './ui/button';
 import {
@@ -13,8 +13,11 @@ import {
   TooltipTrigger,
 } from './ui/tooltip';
 import { memo } from 'react';
+import { useCopyToClipboard } from 'react-copy-to-clipboard';
 import equal from 'fast-deep-equal';
 import { toast } from 'sonner';
+import { motion } from 'framer-motion';
+import { cn } from '@/lib/utils';
 
 export function PureMessageActions({
   chatId,
@@ -35,7 +38,12 @@ export function PureMessageActions({
 
   return (
     <TooltipProvider delayDuration={0}>
-      <div className="flex flex-row gap-2">
+      <motion.div
+        className="flex flex-row gap-2"
+        initial={{ opacity: 0, scale: 0.95 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ duration: 0.2 }}
+      >
         <Tooltip>
           <TooltipTrigger asChild>
             <Button
@@ -65,53 +73,55 @@ export function PureMessageActions({
 
         <Tooltip>
           <TooltipTrigger asChild>
-            <Button
-              data-testid="message-upvote"
-              className="py-1 px-2 h-fit text-muted-foreground !pointer-events-auto"
-              disabled={vote?.isUpvoted}
-              variant="outline"
-              onClick={async () => {
-                const upvote = fetch('/api/vote', {
-                  method: 'PATCH',
-                  body: JSON.stringify({
-                    chatId,
-                    messageId: message.id,
-                    type: 'up',
-                  }),
-                });
+            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+              <Button
+                data-testid="message-upvote"
+                className="py-1 px-2 h-fit text-muted-foreground !pointer-events-auto"
+                disabled={vote?.isUpvoted}
+                variant="outline"
+                onClick={async () => {
+                  const upvote = fetch('/api/vote', {
+                    method: 'PATCH',
+                    body: JSON.stringify({
+                      chatId,
+                      messageId: message.id,
+                      type: 'up',
+                    }),
+                  });
 
-                toast.promise(upvote, {
-                  loading: 'Upvoting Response...',
-                  success: () => {
-                    mutate<Array<Vote>>(
-                      `/api/vote?chatId=${chatId}`,
-                      (currentVotes) => {
-                        if (!currentVotes) return [];
+                  toast.promise(upvote, {
+                    loading: 'Upvoting Response...',
+                    success: () => {
+                      mutate<Array<Vote>>(
+                        `/api/vote?chatId=${chatId}`,
+                        (currentVotes) => {
+                          if (!currentVotes) return [];
 
-                        const votesWithoutCurrent = currentVotes.filter(
-                          (vote) => vote.messageId !== message.id,
-                        );
+                          const votesWithoutCurrent = currentVotes.filter(
+                            (vote) => vote.messageId !== message.id,
+                          );
 
-                        return [
-                          ...votesWithoutCurrent,
-                          {
-                            chatId,
-                            messageId: message.id,
-                            isUpvoted: true,
-                          },
-                        ];
-                      },
-                      { revalidate: false },
-                    );
+                          return [
+                            ...votesWithoutCurrent,
+                            {
+                              chatId,
+                              messageId: message.id,
+                              isUpvoted: true,
+                            },
+                          ];
+                        },
+                        { revalidate: false },
+                      );
 
-                    return 'Upvoted Response!';
-                  },
-                  error: 'Failed to upvote response.',
-                });
-              }}
-            >
-              <ThumbUpIcon />
-            </Button>
+                      return 'Upvoted Response!';
+                    },
+                    error: 'Failed to upvote response.',
+                  });
+                }}
+              >
+                <ThumbUpIcon />
+              </Button>
+            </motion.div>
           </TooltipTrigger>
           <TooltipContent>Upvote Response</TooltipContent>
         </Tooltip>
@@ -168,7 +178,7 @@ export function PureMessageActions({
           </TooltipTrigger>
           <TooltipContent>Downvote Response</TooltipContent>
         </Tooltip>
-      </div>
+      </motion.div>
     </TooltipProvider>
   );
 }

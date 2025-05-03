@@ -1,9 +1,15 @@
 'use client';
 
-import React, { createContext, useRef, useState, useLayoutEffect } from 'react';
-
+import React, {
+  createContext,
+  useRef,
+  useState,
+  useLayoutEffect,
+  memo,
+} from 'react';
 import { Chat } from './chat';
 import { ChatHeader } from './chat-header';
+import { cn } from '@/lib/utils';
 
 import type { Session } from 'next-auth';
 import type { UIMessage } from 'ai';
@@ -20,6 +26,8 @@ export interface ChatUIWrapperProps {
   selectedVisibilityType?: VisibilityType;
   isReadonly?: boolean;
   session: Session;
+  sidebarIsOpen?: boolean;
+  className?: string;
 }
 
 /**
@@ -35,10 +43,11 @@ export function ChatUIWrapper({
   isReadonly = false,
   session,
   sidebarIsOpen,
+  className,
 }: ChatUIWrapperProps) {
   const containerRef = useRef<HTMLDivElement>(null);
-
   const [container, setContainer] = useState<HTMLElement | null>(null);
+
   useLayoutEffect(() => {
     if (containerRef.current) {
       setContainer(containerRef.current);
@@ -47,12 +56,16 @@ export function ChatUIWrapper({
 
   return (
     <TooltipContainerContext.Provider value={container}>
-      <div ref={containerRef} className="relative flex h-full w-full">
-
-        {/* Main content area for chat UI */}
+      <div
+        ref={containerRef}
+        className={cn(
+          'relative flex h-full w-full',
+          'bg-background/95 backdrop-blur-sm',
+          className,
+        )}
+      >
         <div className="flex-1 flex flex-col h-full overflow-hidden">
-          {/* Header Row - Stays at the top, outside the centered chat column */}
-          <header className="flex items-center gap-2 px-4 py-2 border-b border-zinc-200 dark:border-zinc-800">
+          <header className="flex items-center gap-2 px-4 py-3 border-b border-border bg-background/95 backdrop-blur-sm">
             <ChatHeader
               chatId={id}
               isReadonly={isReadonly}
@@ -62,10 +75,9 @@ export function ChatUIWrapper({
             />
           </header>
 
-          {/* Chat Row - Contains the centered content */}
-          <div className="flex-1 flex flex-col min-h-0 overflow-hidden">
-            {/* Centered content with max width constraint */}
-            <div className="size-full max-w-3xl flex flex-col flex-1 min-w-0 min-h-0 bg-background">
+          <div className="flex-1 flex flex-col min-h-0 overflow-hidden relative">
+            {/* Content area */}
+            <div className="max-w-3xl mx-auto flex flex-col flex-1 min-w-0 min-h-0 bg-transparent px-4">
               <Chat
                 id={id}
                 initialMessages={initialMessages}
@@ -73,6 +85,7 @@ export function ChatUIWrapper({
                 selectedVisibilityType={selectedVisibilityType}
                 isReadonly={isReadonly}
                 session={session}
+                className={className}
               />
             </div>
           </div>

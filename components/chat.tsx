@@ -2,20 +2,22 @@
 
 import type { Attachment, UIMessage } from 'ai';
 import { useChat } from '@ai-sdk/react';
-import { useState } from 'react';
+import { useState, memo } from 'react';
 import useSWR, { useSWRConfig } from 'swr';
+import { motion } from 'framer-motion';
 
-import type { Vote } from '@/lib/db/schema';
-import { fetcher, generateUUID } from '@/lib/utils';
+import type { Vote } from '../lib/db/schema';
+import { fetcher, generateUUID } from '../lib/utils';
 import { Artifact } from './artifact';
-import { MultimodalInput } from './multimodal-input';
+import { PureMultimodalInput } from './multimodal-input';
 import { Messages } from './messages';
 import type { VisibilityType } from './visibility-selector';
-import { useArtifactSelector } from '@/hooks/use-artifact';
+import { useArtifactSelector } from '../hooks/use-artifact';
 import { unstable_serialize } from 'swr/infinite';
 import { getChatHistoryPaginationKey } from './sidebar-history';
 import { toast } from './toast';
 import type { Session } from 'next-auth';
+import { cn } from '@/lib/utils';
 
 export function Chat({
   id,
@@ -24,6 +26,7 @@ export function Chat({
   selectedVisibilityType,
   isReadonly,
   session,
+  className,
 }: {
   id: string;
   initialMessages: Array<UIMessage>;
@@ -31,6 +34,7 @@ export function Chat({
   selectedVisibilityType: VisibilityType;
   isReadonly: boolean;
   session: Session;
+  className?: string;
 }) {
   const { mutate } = useSWRConfig();
 
@@ -49,6 +53,7 @@ export function Chat({
     initialMessages,
     experimental_throttle: 100,
     sendExtraMessageFields: true,
+
     generateId: generateUUID,
     experimental_prepareRequestBody: (body) => ({
       id,
@@ -76,7 +81,12 @@ export function Chat({
 
   return (
     <>
-      <div className="flex flex-col min-w-0 h-dvh bg-background">
+      <div
+        className={cn(
+          'flex flex-col min-w-0 h-dvh bg-background/95 backdrop-blur-sm overflow-hidden',
+          className,
+        )}
+      >
         <Messages
           chatId={id}
           status={status}
@@ -86,11 +96,12 @@ export function Chat({
           reload={reload}
           isReadonly={isReadonly}
           isArtifactVisible={isArtifactVisible}
+          className="px-4 md:px-6"
         />
 
-        <form className="flex mx-auto px-4 bg-background pb-4 md:pb-6 gap-2 w-full md:max-w-3xl">
+        <form className="flex mx-auto px-4 md:px-6 bg-white/95 backdrop-blur-sm pb-4 md:pb-6 gap-2 w-full md:max-w-3xl">
           {!isReadonly && (
-            <MultimodalInput
+            <PureMultimodalInput
               chatId={id}
               input={input}
               setInput={setInput}
@@ -102,6 +113,7 @@ export function Chat({
               messages={messages}
               setMessages={setMessages}
               append={append}
+              className="bg-white/95 backdrop-blur-sm"
             />
           )}
         </form>
@@ -122,6 +134,7 @@ export function Chat({
         reload={reload}
         votes={votes}
         isReadonly={isReadonly}
+        className="bg-background/95 backdrop-blur-sm"
       />
     </>
   );

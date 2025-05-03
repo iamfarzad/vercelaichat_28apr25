@@ -3,6 +3,7 @@ import { PreviewMessage, ThinkingMessage } from './message';
 import { useScrollToBottom } from './use-scroll-to-bottom';
 import { Greeting } from './greeting';
 import { memo } from 'react';
+import { cn } from '@/lib/utils';
 import type { Vote } from '@/lib/db/schema';
 import equal from 'fast-deep-equal';
 import type { UseChatHelpers } from '@ai-sdk/react';
@@ -16,6 +17,7 @@ interface MessagesProps {
   reload: UseChatHelpers['reload'];
   isReadonly: boolean;
   isArtifactVisible: boolean;
+  className?: string;
 }
 
 function PureMessages({
@@ -26,6 +28,7 @@ function PureMessages({
   setMessages,
   reload,
   isReadonly,
+  className,
 }: MessagesProps) {
   const [messagesContainerRef, messagesEndRef] =
     useScrollToBottom<HTMLDivElement>();
@@ -33,7 +36,10 @@ function PureMessages({
   return (
     <div
       ref={messagesContainerRef}
-      className="flex flex-col min-w-0 gap-6 flex-1 overflow-y-scroll pt-4"
+      className={cn(
+        'flex flex-col min-w-0 gap-6 flex-1 overflow-y-scroll pt-4',
+        className,
+      )}
     >
       {messages.length === 0 && <Greeting />}
 
@@ -51,12 +57,15 @@ function PureMessages({
           setMessages={setMessages}
           reload={reload}
           isReadonly={isReadonly}
+          className={className}
         />
       ))}
 
       {status === 'submitted' &&
         messages.length > 0 &&
-        messages[messages.length - 1].role === 'user' && <ThinkingMessage />}
+        messages[messages.length - 1].role === 'user' && (
+          <ThinkingMessage className={className} />
+        )}
 
       <div
         ref={messagesEndRef}

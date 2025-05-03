@@ -1,8 +1,7 @@
 'use client';
 
-import { GlowingOrb } from './hero-section/orb';
-import { FloatingOrb } from './floating-orb';
-import './hero-section/orb.css';
+import { useId } from 'react';
+import { CombinedOrb } from './hero-section/combined-orb';
 import { cn } from '@/lib/utils';
 import { AnimatedGridPattern } from '@/components/ui/animated-grid-pattern';
 
@@ -19,6 +18,8 @@ export function HeroSection({
   buttonText,
   onButtonClick,
 }: HeroSectionProps) {
+  const inputId = useId();
+
   return (
     <div className="relative max-w-3xl w-full mx-auto flex flex-col items-center">
       {/* Animated grid pattern background */}
@@ -28,21 +29,25 @@ export function HeroSection({
         duration={3}
         repeatDelay={1}
         className={cn(
-          'pointer-events-none absolute inset-0 -z-10 [mask-image:radial-gradient(500px_circle_at_center,white,transparent)] h-full w-full skew-y-12',
+          'pointer-events-none absolute inset-0 -z-10',
+          '[mask-image:radial-gradient(500px_circle_at_center,white,transparent)]',
+          'h-full w-full skew-y-12',
         )}
       />
+
       {/* Main content */}
-      <h1 className="text-4xl font-bold tracking-tighter sm:text-5xl md:text-6xl mt-8 mb-4">
+      <h1 className="text-4xl font-bold tracking-tighter sm:text-5xl md:text-6xl mt-8 mb-4 text-gradient">
         {title}
       </h1>
-      <p className="text-muted-foreground text-lg sm:text-xl mb-8">
+      <p className="text-muted-foreground text-lg sm:text-xl mb-8 text-center">
         {description}
       </p>
-      <GlowingOrb className="w-24 h-24 mx-auto mb-10" />
-      <FloatingOrb />
+
+      <CombinedOrb className="w-24 h-24 mx-auto mb-10" />
+
       <div className="flex items-center justify-center max-w-md w-full bg-zinc-800 rounded-full px-4 py-2 shadow-inner text-white mb-6">
         <input
-          id="askbar-input"
+          id={inputId}
           className="flex-1 bg-transparent outline-none text-base placeholder-zinc-400"
           placeholder="Ask me anything about AI consulting"
           onKeyDown={(e) => {
@@ -50,12 +55,13 @@ export function HeroSection({
               onButtonClick((e.target as HTMLInputElement).value);
             }
           }}
+          aria-label="Ask a question"
         />
         <button
           type="button"
           onClick={() => {
             const inputEl = document.getElementById(
-              'askbar-input',
+              inputId,
             ) as HTMLInputElement;
             onButtonClick(inputEl.value);
           }}
@@ -67,6 +73,7 @@ export function HeroSection({
             viewBox="0 0 20 20"
             fill="currentColor"
             className="w-5 h-5"
+            aria-hidden="true"
           >
             <path
               fillRule="evenodd"
