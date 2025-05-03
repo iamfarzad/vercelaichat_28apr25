@@ -13,6 +13,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { UserIcon, LogOutIcon, SettingsIcon } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar';
+import { ModernButton } from './ui/modern-button';
 
 export function SidebarUserNav({ user }: { user: User }) {
   const router = useRouter();
@@ -61,6 +62,13 @@ export function SidebarUserNav({ user }: { user: User }) {
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
+      <ModernButton
+        variant="secondary"
+        className="px-4 py-2 text-sm"
+        onClick={() => signOut()}
+      >
+        Sign out
+      </ModernButton>
     </div>
   );
 }

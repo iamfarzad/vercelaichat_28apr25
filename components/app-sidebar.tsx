@@ -41,7 +41,7 @@ export function AppSidebar({ user }: { user: User | undefined }) {
             <Tooltip>
               <TooltipTrigger asChild>
                 <Button
-                  variant="ghost"
+                  variant="modernPrimary"
                   type="button"
                   className="p-2 h-fit"
                   onClick={() => {

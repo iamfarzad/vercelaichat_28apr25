@@ -1,4 +1,5 @@
 import { signOut } from '@/app/(auth)/auth';
+import { ModernButton } from '@/components/ui/modern-button';
 
 export const SignOutForm = () => {
   return (
@@ -11,12 +12,13 @@ export const SignOutForm = () => {
         });
       }}
     >
-      <button
+      <ModernButton
         type="submit"
+        variant="secondary"
         className="w-full text-left px-1 py-0.5 text-red-500"
       >
         Sign out
-      </button>
+      </ModernButton>
     </form>
   );
 };
