@@ -37,6 +37,12 @@ jobs:
       with:
         version: 8
 
+    - name: Debug pnpm install
+      run: |
+        echo "PATH=$PATH"
+        which pnpm
+        pnpm --version || echo "pnpm not found"
+
     - name: Install dependencies
       run: pnpm install
 
