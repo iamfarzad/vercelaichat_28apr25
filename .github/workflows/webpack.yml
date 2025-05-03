@@ -37,6 +37,18 @@ jobs:
       with:
         version: 8
 
+    - name: Fallback install pnpm if missing
+      run: |
+        if ! command -v pnpm; then
+          npm install -g pnpm
+        fi
+
+    - name: Check for pnpm-lock.yaml
+      run: |
+        if [ ! -f pnpm-lock.yaml ]; then
+          echo "WARNING: pnpm-lock.yaml not found in repo root!"
+        fi
+
     - name: Debug pnpm install
       run: |
         echo "PATH=$PATH"
