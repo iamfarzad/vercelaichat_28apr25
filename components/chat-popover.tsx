@@ -7,7 +7,7 @@ import { AppSidebar } from './app-sidebar';
 import { ChatUIWrapper } from './chat-ui-wrapper';
 import { X, PanelLeftIcon } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { Button } from './ui/button';
+import { ModernButton } from './ui/modern-button';
 import type { Session } from 'next-auth';
 import type { UIMessage } from 'ai';
 import type { VisibilityType } from './visibility-selector';
@@ -84,13 +84,13 @@ export function ChatPopover({
             popoverClassName,
           )}
         >
-          <Button
+          <ModernButton
             onClick={onClose}
             className="absolute top-3 right-3 z-50 size-9 rounded-full bg-background/80 backdrop-blur-sm border border-border"
             aria-label="Close chat dialog"
           >
             <X className="size-4" />
-          </Button>
+          </ModernButton>
 
           <ChatContent
             id={id}
@@ -133,7 +133,7 @@ function ChatContent({
       {/* Main content */}
       <div className="flex-1 flex flex-col h-full relative">
         {!sidebarIsOpen && (
-          <Button
+          <ModernButton
             variant="ghost"
             size="icon"
             onClick={toggleSidebar}
@@ -141,7 +141,7 @@ function ChatContent({
             aria-label="Open sidebar"
           >
             <PanelLeftIcon className="size-4" />
-          </Button>
+          </ModernButton>
         )}
 
         <ChatUIWrapper

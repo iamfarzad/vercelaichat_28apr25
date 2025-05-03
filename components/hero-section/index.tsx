@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { ModernButton } from '@/components/ui/modern-button';
+import { Button } from '@/components/ui/button';
 import { CombinedOrb } from './combined-orb';
 import { AskBar } from './ask-bar';
 
@@ -47,9 +47,9 @@ export function HeroSection({
         </p>
 
         <div className="flex flex-col items-center gap-6">
-          <ModernButton onClick={() => onButtonClick()} variant="primary">
+          <Button onClick={() => onButtonClick()} variant="modernPrimary">
             {buttonText}
-          </ModernButton>
+          </Button>
         </div>
       </motion.div>
       <div className="w-full flex flex-col items-center mt-12 mb-8">

@@ -10,6 +10,7 @@ import React, {
 import { Chat } from './chat';
 import { ChatHeader } from './chat-header';
 import { cn } from '@/lib/utils';
+import { ModernButton } from './ui/modern-button';
 
 import type { Session } from 'next-auth';
 import type { UIMessage } from 'ai';

@@ -8,7 +8,7 @@ import {
 } from '@/components/ui/tooltip';
 
 import { SidebarLeftIcon } from './icons';
-import { Button } from './ui/button';
+import { ModernButton } from './ui/modern-button';
 
 export function SidebarToggle({
   className,
@@ -18,14 +18,14 @@ export function SidebarToggle({
   return (
     <Tooltip>
       <TooltipTrigger asChild>
-        <Button
+        <ModernButton
           data-testid="sidebar-toggle-button"
           onClick={toggleSidebar}
-          variant="outline"
+          variant="secondary"
           className="md:px-2 md:h-fit"
         >
           <SidebarLeftIcon size={16} />
-        </Button>
+        </ModernButton>
       </TooltipTrigger>
       <TooltipContent align="start">Toggle Sidebar</TooltipContent>
     </Tooltip>

@@ -1,11 +1,12 @@
-import { Button } from '@/components/ui/button';
+import { ModernButton } from '@/components/ui/modern-button';
 
 export function CTAButton({ className = '' }: { className?: string }) {
   return (
-    <Button
-      className={`bg-orange-500 hover:bg-orange-600 text-white text-lg px-6 py-3 rounded-full shadow-lg transition ${className}`}
+    <ModernButton
+      variant="primary"
+      className={`text-lg px-6 py-3 rounded-full shadow-lg transition ${className}`}
     >
       Book a free call
-    </Button>
+    </ModernButton>
   );
 }

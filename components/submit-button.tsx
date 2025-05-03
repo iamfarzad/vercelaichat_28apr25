@@ -4,7 +4,7 @@ import { useFormStatus } from 'react-dom';
 
 import { LoaderIcon } from '@/components/icons';
 
-import { Button } from './ui/button';
+import { ModernButton } from './ui/modern-button';
 
 export function SubmitButton({
   children,
@@ -16,7 +16,7 @@ export function SubmitButton({
   const { pending } = useFormStatus();
 
   return (
-    <Button
+    <ModernButton
       type={pending ? 'button' : 'submit'}
       aria-disabled={pending || isSuccessful}
       disabled={pending || isSuccessful}
@@ -33,6 +33,6 @@ export function SubmitButton({
       <output aria-live="polite" className="sr-only">
         {pending || isSuccessful ? 'Loading' : 'Submit form'}
       </output>
-    </Button>
+    </ModernButton>
   );
 }
