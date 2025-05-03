@@ -6,11 +6,22 @@ import postgres from 'postgres';
 config();
 
 const runMigrate = async () => {
-  if (!process.env.POSTGRES_URL) {
-    throw new Error('POSTGRES_URL is not defined');
+  const url = process.env.POSTGRES_URL;
+  if (!url) {
+    throw new Error('POSTGRES_URL is not defined. Please set it in your environment variables.');
   }
 
-  const connection = postgres(process.env.POSTGRES_URL, { max: 1 });
+  // Basic PostgreSQL URL validation
+  const pgUrlPattern = /^postgres(?:ql)?:\/\/[^:]+:[^@]+@[^:]+:\d+\/[^?]+/;
+  if (!pgUrlPattern.test(url)) {
+    throw new Error(
+      `POSTGRES_URL is invalid: "${url}"
+Expected format: postgres://user:password@host:port/database
+Check for typos, missing credentials, or unsupported URL schemes.`
+    );
+  }
+
+  const connection = postgres(url, { max: 1 });
   const db = drizzle(connection);
 
   console.log('⏳ Running migrations...');
