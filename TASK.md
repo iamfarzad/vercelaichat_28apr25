@@ -42,6 +42,16 @@ Implement the full Vercel Chat AI interface inside a floating modal (`ChatPopove
 - [x] README and .env.example now clearly document environment setup and requirements
 - [x] Enhanced MultimodalInput component with file attachments and dynamic resizing
 - [x] Fixed syntax errors in message-actions.tsx component
+- [x] **Header UI/UX improvements:**
+  - [x] Glowing dot brand accent and "F.B Consulting" brand name
+  - [x] Responsive navigation with hamburger menu on mobile (right-aligned)
+  - [x] "Skip to content" accessibility link
+  - [x] All interactive elements have `aria-label`s
+  - [x] Active link highlighting in navigation
+  - [x] Theme toggle and search bar with brand color focus
+  - [x] Placeholder for logo image (optional)
+  - [x] Accessibility improvements (semantic nav, keyboard support)
+- [x] Mobile navigation menu closes on link click
 
 ---
 
@@ -73,12 +83,16 @@ Implement the full Vercel Chat AI interface inside a floating modal (`ChatPopove
 
 ## 🧪 Manual Test Checklist
 
-- [ ] Button opens chat modal cleanly
-- [ ] Modal closes with ESC or outside click
-- [ ] Chat renders with messages + input + sidebar
-- [ ] Sidebar can toggle on small screens
-- [ ] Input stays fixed during scroll
-- [ ] Works on mobile and desktop
+- [x] Button opens chat modal cleanly
+- [x] Modal closes with ESC or outside click
+- [x] Chat renders with messages + input + sidebar
+- [x] Sidebar can toggle on small screens
+- [x] Input stays fixed during scroll
+- [x] Works on mobile and desktop
+- [x] Header navigation is accessible and responsive
+- [x] Hamburger menu appears on mobile and is right-aligned
+- [x] "Skip to content" link is present and works
+- [x] Brand accent and name are visible and styled
 
 ---
 
