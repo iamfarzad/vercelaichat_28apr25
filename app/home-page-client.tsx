@@ -1,12 +1,11 @@
 'use client';
 
-import { useState, memo } from 'react';
+import { useState } from 'react';
 import { Header } from '@/components/header';
 import { Footer } from '@/components/footer';
 import { ChatPopover } from '@/components/chat-popover';
-import { ThemeProvider } from '@/temp-next/components/theme-provider';
+import { ThemeProvider } from '@/components/theme-provider';
 import { generateUUID } from '@/lib/utils';
-import { AnimatedGridPattern } from '@/components/ui/animated-grid-pattern';
 import { HeroSection } from '@/components/hero-section';
 import { ServicesSection } from '@/components/services-section';
 import { WhyStartSection } from '@/components/why-start-section';
@@ -30,8 +29,15 @@ export default function HomePageClient({
   selectedChatModel = 'grok-2-1212',
   isSidebarCollapsed = false,
 }: HomePageClientProps) {
+  // Define a type for chat messages
+  interface ChatMessage {
+    id: string;
+    role: 'user' | 'assistant' | 'system' | 'function' | 'tool' | 'data';
+    content: string;
+  }
+
   const [showChat, setShowChat] = useState(false);
-  const [initialMessages, setInitialMessages] = useState<any[]>([]);
+  const [initialMessages, setInitialMessages] = useState<ChatMessage[]>([]);
 
   function handleChatLaunch(message?: string) {
     if (message) {
@@ -53,6 +59,7 @@ export default function HomePageClient({
             description="AI should be simple, not complicated. We help you start the right way and master AI in daily work—employees and leaders alike."
             buttonText="Book Free Call"
             onButtonClick={handleChatLaunch}
+            className="w-full max-w-3xl min-h-[60vh] flex flex-col items-center justify-center py-16 md:py-24"
           />
 
           <ServicesSection />
