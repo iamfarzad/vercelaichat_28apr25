@@ -12,7 +12,6 @@ export function Header() {
   const pathname = usePathname();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
-  // Navigation links
   const navLinks = [
     { href: '/', label: 'Home' },
     { href: '/services', label: 'Services' },
@@ -29,15 +28,14 @@ export function Header() {
       >
         Skip to content
       </a>
-      <div className="container flex justify-between items-center h-16 px-4">
+      <div className="container flex items-center h-16 px-4 relative">
+        {/* Brand */}
         <Link
           href="/"
-          className="flex items-center gap-2"
+          className="flex items-center gap-2 shrink-0"
           aria-label="Go to homepage"
         >
           <span className="relative flex items-center">
-            {/* Optional: Logo image */}
-            {/* <img src="/logo.svg" alt="F.B Consulting Logo" className="w-6 h-6 mr-2" /> */}
             <span
               className="absolute w-2 h-2 rounded-full bg-brand-orange animate-glow-dot transition-colors duration-300"
               style={{ boxShadow: '0 0 8px 2px oklch(0.686 0.219 41.6)' }}
@@ -49,9 +47,31 @@ export function Header() {
           </span>
         </Link>
 
-        <div className="flex items-center gap-4">
+        {/* Centered nav */}
+        {!isMobile && (
+          <nav className="flex-1 flex justify-center" aria-label="Main navigation">
+            <div className="flex items-center gap-6">
+              {navLinks.map((link) => (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  className={`text-sm text-muted-foreground hover:text-brand-orange transition-colors ${
+                    pathname === link.href ? 'font-bold text-brand-orange underline underline-offset-4' : ''
+                  }`}
+                  aria-current={pathname === link.href ? 'page' : undefined}
+                >
+                  {link.label}
+                </Link>
+              ))}
+            </div>
+          </nav>
+        )}
+
+        {/* Right controls */}
+        <div className="flex items-center gap-4 shrink-0 ml-auto">
           <SearchBar />
           <ThemeToggle />
+          {/* Mobile hamburger menu (right-aligned) */}
           {isMobile && (
             <div className="flex items-center">
               <button
