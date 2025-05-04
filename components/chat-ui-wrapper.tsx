@@ -60,7 +60,7 @@ export function ChatUIWrapper({
         ref={containerRef}
         className={cn(
           'relative flex h-full w-full',
-          'bg-background/95 backdrop-blur-sm',
+          'bg-background', // solid background, theme-aware
           className,
         )}
       >
