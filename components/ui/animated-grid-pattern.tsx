@@ -9,12 +9,14 @@ export function AnimatedGridPattern({
   duration = 2,
   repeatDelay = 0.5,
   className = '',
+  color = 'bg-black/10', // NEW: default to subtle black
 }: {
   numSquares?: number;
   maxOpacity?: number;
   duration?: number;
   repeatDelay?: number;
   className?: string;
+  color?: string; // NEW
 }) {
   // Remove console.log in production code
   const id = useId();
@@ -26,7 +28,7 @@ export function AnimatedGridPattern({
         // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
         i
       }`}
-      className="absolute bg-white/10 rounded"
+      className={cn('absolute rounded', color)} // Use color prop
       initial={{ opacity: 0 }}
       animate={{ opacity: maxOpacity }}
       transition={{

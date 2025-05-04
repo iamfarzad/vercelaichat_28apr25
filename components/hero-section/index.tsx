@@ -2,9 +2,9 @@
 
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { EnhancedOrb } from './enhanced-orb';
-import { AskBar } from './ask-bar';
 import { ModernButton } from '@/components/ui/modern-button';
+import { CombinedOrb } from './combined-orb';
+import { AskBar } from './ask-bar';
 
 interface HeroSectionProps {
   title: string;
@@ -34,7 +34,7 @@ export function HeroSection({
         className="text-center"
       >
         <div className="inline-flex items-center gap-2 px-3 py-1 mb-6 rounded-full bg-muted/50 border border-border text-xs font-medium">
-          <span className="w-2 h-2 rounded-full bg-brand-orange"></span>
+          <span className="size-2 rounded-full bg-brand-orange" />
           <span>AI-Powered Wellness</span>
         </div>
 
@@ -52,10 +52,9 @@ export function HeroSection({
           </ModernButton>
         </div>
       </motion.div>
-
-      <div className="relative w-full mt-12 mb-8">
-        <EnhancedOrb className="mx-auto" />
-        <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-full max-w-md">
+      <div className="w-full flex flex-col items-center mt-12 mb-8">
+        <CombinedOrb />
+        <div className="w-full max-w-md mt-8">
           <AskBar onSend={handleAskSubmit} />
         </div>
       </div>

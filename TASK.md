@@ -55,7 +55,16 @@ Implement the full Vercel Chat AI interface inside a floating modal (`ChatPopove
 
 ---
 
-## 🚧 To-Do
+## ✅ Completed (recent updates)
+
+- [x] Fixed copy-to-clipboard error in message-actions.tsx by replacing broken hook with a custom Clipboard API hook
+- [x] Fixed missing import for `equal` in message.tsx to resolve ReferenceError
+- [x] Updated AnimatedGridPattern to use a visible, subtle black grid for white backgrounds
+- [x] Ensured hero section always displays the animated grid as a full background, matching design reference
+
+---
+
+## 🚧 To-Do (remaining)
 
 ### 🔁 Functional
 
@@ -63,21 +72,17 @@ Implement the full Vercel Chat AI interface inside a floating modal (`ChatPopove
 - [ ] Ensure sidebar toggle works correctly across all screen sizes
 - [ ] Validate scroll-to-bottom behavior on message stream
 - [ ] Support uploading or multimodal UI (if desired)
-- [ ] Fix remaining lint warnings in message-actions.tsx
+- [ ] Fix remaining lint warnings in message-actions.tsx (review after recent changes)
 - [ ] Test message actions (copy, upvote, downvote) functionality
+- [ ] Review chat UI parity with Vercel Chat SDK: file upload, history, artifacts, accessibility, theming, error/loading states, and update imports/paths as needed
 
 ### ✨ Enhancements
 
-- [x] Modular Hero Section with AskBar and CTAButton (replaces old CTA/button logic)
-- [x] AskBar sends its value as first chat message when popover opens
-- [x] Animate the GlowingOrb with a pulse or effect
 - [ ] CTAButton links to Calendly or opens a booking modal
 - [ ] Add smooth open/close animation using `framer-motion`
 - [ ] Remember sidebar visibility state (e.g. with `localStorage`)
 - [ ] Optional dark/light theme toggle
 - [ ] Add loading indicator to "Click to Chat" button
-- [x] Resolve any remaining lint errors (type issues, imports, accessibility)
-- [x] Double-check all modular imports/exports in hero-section and chat components
 
 ---
 

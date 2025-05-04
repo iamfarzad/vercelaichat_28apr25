@@ -237,10 +237,10 @@ export function PureMultimodalInput({
         </Button>
 
         <Button
-          variant="default"
           className="h-fit py-2 px-3"
           disabled={status === 'streaming' || !input.trim()}
-          onClick={handleSubmit}
+          onClick={() => handleSubmit()}
+          aria-label={status === 'streaming' ? 'Stop' : 'Send'}
         >
           {status === 'streaming' ? (
             <StopIcon className="h-4 w-4" />
@@ -382,6 +382,7 @@ function PureSendButton({
         submitForm();
       }}
       disabled={input.length === 0 || uploadQueue.length > 0}
+      aria-label="Send"
     >
       <ArrowUpIcon size={14} />
     </Button>

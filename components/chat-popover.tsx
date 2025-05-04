@@ -6,8 +6,8 @@ import { SidebarProvider, useSidebar } from './ui/sidebar';
 import { AppSidebar } from './app-sidebar';
 import { ChatUIWrapper } from './chat-ui-wrapper';
 import { X, PanelLeftIcon } from 'lucide-react';
-import { Button } from './ui/button';
 import { cn } from '@/lib/utils';
+import { Button } from './ui/button';
 import type { Session } from 'next-auth';
 import type { UIMessage } from 'ai';
 import type { VisibilityType } from './visibility-selector';
@@ -72,19 +72,19 @@ export function ChatPopover({
         aria-label="Chat dialog"
         onClick={(e) => e.target === e.currentTarget && onClose()}
       >
+        {/* Animated subtle grid background */}
+        <div className="absolute inset-0 z-0 opacity-10 pointer-events-none" />
         <div
           ref={modalRef}
           role="document"
           className={cn(
             'relative flex w-[95vw] max-w-[1200px] h-[92vh] md:h-[94vh] lg:h-[92vh]',
-            'bg-background/95 backdrop-blur-sm rounded-lg shadow-2xl overflow-hidden',
+            'bg-background/95 backdrop-blur-sm rounded-2xl shadow-2xl overflow-hidden',
             'border border-border transition-all duration-200',
             popoverClassName,
           )}
         >
           <Button
-            variant="ghost"
-            size="icon"
             onClick={onClose}
             className="absolute top-3 right-3 z-50 size-9 rounded-full bg-background/80 backdrop-blur-sm border border-border"
             aria-label="Close chat dialog"

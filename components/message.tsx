@@ -18,6 +18,7 @@ import { DocumentPreview } from './document-preview';
 import { MessageReasoning } from './message-reasoning';
 import { LoaderIcon, ChevronDownIcon } from './icons';
 import type { UseChatHelpers } from '@ai-sdk/react';
+import equal from 'fast-deep-equal';
 
 const PurePreviewMessage = ({
   chatId,
@@ -162,7 +163,7 @@ const PurePreviewMessage = ({
                       key={toolCallId}
                       className={cn(
                         'skeleton',
-                        ['getWeather'].includes(toolName) && 'skeleton'
+                        ['getWeather'].includes(toolName) && 'skeleton',
                       )}
                     >
                       {toolName === 'getWeather' ? (
@@ -276,7 +277,7 @@ export const ThinkingMessage = ({ className }: { className?: string }) => {
       <div
         className={cn(
           'flex gap-4 group-data-[role=user]/message:px-3 w-full group-data-[role=user]/message:w-fit group-data-[role=user]/message:ml-auto group-data-[role=user]/message:max-w-2xl group-data-[role=user]/message:py-2 rounded-xl',
-          'group-data-[role=user]/message:bg-muted'
+          'group-data-[role=user]/message:bg-muted',
         )}
       >
         <div className="size-8 flex items-center rounded-full justify-center ring-1 shrink-0 ring-border">
