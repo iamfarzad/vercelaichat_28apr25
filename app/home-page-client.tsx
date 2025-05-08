@@ -1,10 +1,11 @@
 'use client';
 
 import { useState } from 'react';
+import type { Message } from '@ai-sdk/react';
 import { Header } from '@/components/header';
 import { Footer } from '@/components/footer';
 import { ChatPopover } from '@/components/chat-popover';
-import { ThemeProvider } from '@/components/theme-provider';
+import { ThemeProvider } from 'next-themes';
 import { generateUUID } from '@/lib/utils';
 import { HeroSection } from '@/components/hero-section';
 import { ServicesSection } from '@/components/services-section';
@@ -29,19 +30,17 @@ export default function HomePageClient({
   selectedChatModel = 'grok-2-1212',
   isSidebarCollapsed = false,
 }: HomePageClientProps) {
-  // Define a type for chat messages
-  interface ChatMessage {
-    id: string;
-    role: 'user' | 'assistant' | 'system' | 'function' | 'tool' | 'data';
-    content: string;
-  }
-
   const [showChat, setShowChat] = useState(false);
-  const [initialMessages, setInitialMessages] = useState<ChatMessage[]>([]);
+  const [initialMessages, setInitialMessages] = useState<Message[]>([]);
 
   function handleChatLaunch(message?: string) {
     if (message) {
-      setInitialMessages([{ id: 'msg-hero', role: 'user', content: message }]);
+      setInitialMessages([{
+        id: 'msg-hero',
+        role: 'user',
+        content: message,
+        createdAt: new Date()
+      }]);
     }
     setShowChat(true);
   }

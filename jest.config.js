@@ -5,14 +5,21 @@ module.exports = {
   setupFilesAfterEnv: ['<rootDir>/jest.setup.ts'],
   moduleNameMapper: {
     '^@/(.*)$': '<rootDir>/$1',
+    // Keep CSS module stub
+    '\\.(css|less|scss|sass)$': 'identity-obj-proxy',
   },
   transform: {
-    '^.+\\.(ts|tsx)$': 'ts-jest',
+    // Standard ts-jest transform for TS/TSX
+    '^.+\\.(ts|tsx)$': [
+      'ts-jest',
+      {
+        tsconfig: 'tsconfig.json',
+        // No explicit jsx setting, rely on tsconfig or defaults
+      },
+    ],
   },
-  transformIgnorePatterns: [
-    '/node_modules/(?!(your-esm-package|another-esm-package)/)', // allow transformation of ESM packages if needed
-    '/.next/',
-  ],
+  // Simple ignore pattern
+  transformIgnorePatterns: ['/node_modules/', '/.next/'],
   testMatch: [
     '<rootDir>/**/?(*.)+(spec|test).[jt]s?(x)',
     '!<rootDir>/tests/e2e/**',

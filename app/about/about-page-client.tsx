@@ -1,4 +1,8 @@
-// ... existing imports and code
+import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
+import { Card, CardContent } from '@/components/ui/card';
+import { ModernButton } from '@/components/ui/modern-button';
+import { CheckCircle } from 'lucide-react';
+import { motion } from 'framer-motion';
 
 export function AboutPageClient(props: any) {
   return (

@@ -34,13 +34,13 @@ export const PreviewAttachment = ({
         {isUploading && (
           <div
             data-testid="input-attachment-loader"
-            className="animate-spin absolute text-zinc-500"
+            className="animate-spin absolute text-muted-foreground"
           >
             <LoaderIcon />
           </div>
         )}
       </div>
-      <div className="text-xs text-zinc-500 max-w-16 truncate">{name}</div>
+      <div className="text-xs text-muted-foreground max-w-16 truncate">{name}</div>
     </div>
   );
 };

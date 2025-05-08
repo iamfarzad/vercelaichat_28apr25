@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { ModernButton } from '@/components/ui/modern-button';
-import { CombinedOrb } from './combined-orb';
+import MinimalOrb from './ParticleOrb';
 import { AskBar } from './ask-bar';
 import { AnimatedGridPattern } from '@/components/ui/animated-grid-pattern';
 import { cn } from '@/lib/utils';
@@ -54,18 +54,15 @@ export function HeroSection({
           <span>F.B Consulting Online</span>
         </div>
         <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 text-foreground dark:text-foreground">
-          What your company needs to get{' '}
-          <span className="text-[oklch(var(--brand-orange))] font-bold">
-            started
-          </span>{' '}
-          with AI
+          {title}
         </h1>
         <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto mb-8">
           {description}
         </p>
       </motion.div>
+
       <div className="w-full flex flex-col items-center mt-12 mb-8 relative z-10">
-        <CombinedOrb />
+        <MinimalOrb />
         <div className="w-full max-w-md mt-8 flex flex-col items-center gap-4">
           <AskBar onSend={handleAskSubmit} />
           <ModernButton
@@ -74,7 +71,7 @@ export function HeroSection({
             size="sm"
             className="bg-white text-black border border-border hover:bg-muted/80 hover:text-black"
           >
-            Book Free Call
+            {buttonText}
           </ModernButton>
         </div>
       </div>

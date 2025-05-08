@@ -21,8 +21,8 @@ export function AskBar({ onSend }: AskBarProps) {
     <div className="flex items-center w-full max-w-md mx-auto bg-card/80 backdrop-blur-md rounded-full px-5 py-3 shadow-lg border border-border">
       {/* biome-ignore lint/nursery/noStaticElementInteractions: <explanation> */}
       <input
-        className="flex-1 bg-transparent outline-none text-base placeholder-muted-foreground"
-        placeholder="Ask me anything about mental clarity..."
+        className="flex-1 bg-transparent outline-none text-base placeholder:text-muted-foreground"
+        placeholder="Ask me anything about..."
         value={input}
         onChange={(e) => setInput(e.target.value)}
         onKeyDown={(e) => {

@@ -8,6 +8,7 @@ module.exports = {
   theme: {
     extend: {
       colors: {
+        background: '#f8fafc',
         brand: {
           orange: '#ff7a1a',
         },

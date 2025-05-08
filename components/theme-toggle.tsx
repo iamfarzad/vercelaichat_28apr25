@@ -1,5 +1,8 @@
 'use client';
 
+// Diagnostic log for hydration mismatch
+console.log('[ThemeToggle] Render', typeof window, Date.now());
+
 import { useTheme } from 'next-themes';
 
 export default function ThemeToggle() {

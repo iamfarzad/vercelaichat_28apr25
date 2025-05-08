@@ -12,7 +12,7 @@ export function Footer() {
           <div className="flex flex-col space-y-4">
             <div className="flex items-center gap-2">
               <span className="relative" aria-hidden="true">
-                <span className="absolute w-2 h-2 rounded-full bg-brand-orange animate-pulse"></span>
+                <span className="absolute size-2 rounded-full bg-brand-orange animate-pulse"></span>
               </span>
               <span className="font-bold text-xl bg-gradient-to-r from-[oklch(var(--brand-orange))] to-[oklch(var(--brand-orange)/0.8)] bg-clip-text text-transparent">
                 F.B Consulting

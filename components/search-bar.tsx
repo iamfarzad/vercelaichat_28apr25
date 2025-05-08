@@ -1,6 +1,9 @@
 import { useRef, useState } from 'react';
 import { Search } from 'lucide-react';
 
+// Diagnostic log for hydration mismatch
+console.log('[SearchBar] Render', typeof window, Date.now());
+
 export default function SearchBar() {
   const [value, setValue] = useState('');
   const [focused, setFocused] = useState(false);

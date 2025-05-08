@@ -11,7 +11,7 @@ export async function GET(request: NextRequest) {
 
   if (startingAfter && endingBefore) {
     return Response.json(
-      'Only one of starting_after or ending_before can be provided!',
+      { error: 'Only one of starting_after or ending_before can be provided!' },
       { status: 400 },
     );
   }
@@ -19,7 +19,7 @@ export async function GET(request: NextRequest) {
   const session = await auth();
 
   if (!session?.user?.id) {
-    return Response.json('Unauthorized!', { status: 401 });
+    return Response.json({ error: 'Unauthorized!' }, { status: 401 });
   }
 
   try {
@@ -30,8 +30,13 @@ export async function GET(request: NextRequest) {
       endingBefore,
     });
 
-    return Response.json(chats);
+    return Response.json({
+      data: chats,
+      limit,
+      startingAfter,
+      endingBefore,
+    });
   } catch (_) {
-    return Response.json('Failed to fetch chats!', { status: 500 });
+    return Response.json({ error: 'Failed to fetch chats!' }, { status: 500 });
   }
 }

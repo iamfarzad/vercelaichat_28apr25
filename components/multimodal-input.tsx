@@ -56,6 +56,11 @@ export function PureMultimodalInput({
   const [isFocused, setIsFocused] = useState(false);
   const [showSuggestions, setShowSuggestions] = useState(false);
 
+  // Show suggestions only when input is focused and empty
+  useEffect(() => {
+    setShowSuggestions(isFocused && input.trim() === '');
+  }, [isFocused, input]);
+
   useEffect(() => {
     if (textareaRef.current) {
       adjustHeight();
@@ -100,11 +105,7 @@ export function PureMultimodalInput({
   const handleInput = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
     setInput(event.target.value);
     adjustHeight();
-    if (event.target.value) {
-      setShowSuggestions(true);
-    } else {
-      setShowSuggestions(false);
-    }
+    // showSuggestions is now handled by useEffect above
   };
 
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -120,6 +121,7 @@ export function PureMultimodalInput({
     setAttachments([]);
     setLocalStorageInput('');
     resetHeight();
+    setShowSuggestions(false);
 
     if (width && width > 768) {
       textareaRef.current?.focus();
@@ -187,38 +189,34 @@ export function PureMultimodalInput({
   );
 
   return (
-    <div className={cn('flex flex-col gap-2 p-4', className)}>
-      <div className="flex flex-row gap-2">
-        <Textarea
-          data-testid="chat-input"
-          ref={textareaRef}
-          className="flex-1 resize-none bg-transparent outline-none"
-          placeholder="Send a message..."
-          value={input}
-          onChange={handleInput}
-          onKeyDown={(e) => {
-            if (e.key === 'Enter' && !e.shiftKey) {
-              e.preventDefault();
-              handleSubmit();
-            }
-          }}
-          onFocus={() => setIsFocused(true)}
-          onBlur={() => setIsFocused(false)}
-        />
-
-        <Button
-          variant="outline"
-          className="h-fit py-2 px-3"
+    <div
+      className={cn(
+        'flex flex-col gap-2 p-4 bg-card',
+        className,
+      )}
+    >
+      <form
+        className="flex items-end gap-2 w-full"
+        onSubmit={(e) => {
+          e.preventDefault();
+          if (status !== 'streaming' && input.trim()) handleSubmit();
+        }}
+        role="search"
+        aria-label="Chat input"
+      >
+        <button
+          type="button"
+          className="flex items-center justify-center rounded-md p-2 h-11 w-11 border border-border bg-card text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
+          aria-label="Attach file"
+          tabIndex={0}
           onClick={() => {
             const inputElement = document.createElement('input');
             inputElement.type = 'file';
             inputElement.accept = 'image/*,video/*,audio/*,application/pdf';
             inputElement.multiple = true;
-
             inputElement.addEventListener('change', (event) => {
               const files = (event.target as HTMLInputElement).files;
               if (!files) return;
-
               const newAttachments = Array.from(files).map((file) => ({
                 id: crypto.randomUUID(),
                 type: file.type,
@@ -226,29 +224,49 @@ export function PureMultimodalInput({
                 size: file.size,
                 url: URL.createObjectURL(file),
               }));
-
               setAttachments((prev) => [...prev, ...newAttachments]);
             });
-
             inputElement.click();
           }}
         >
-          <PaperclipIcon className="h-4 w-4" />
-        </Button>
-
-        <Button
-          className="h-fit py-2 px-3"
+          <PaperclipIcon className="h-5 w-5" />
+        </button>
+        <Textarea
+          data-testid="chat-input"
+          ref={textareaRef}
+          className="flex-1 min-h-[44px] max-h-40 resize-none bg-transparent outline-none px-3 py-2 rounded-lg border border-border focus:ring-2 focus:ring-primary"
+          placeholder="Send a message…"
+          value={input}
+          onChange={handleInput}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter' && !e.shiftKey) {
+              e.preventDefault();
+              if (status !== 'streaming' && input.trim()) handleSubmit();
+            }
+          }}
+          onFocus={() => setIsFocused(true)}
+          onBlur={() => setIsFocused(false)}
+          aria-label="Type your message"
+          rows={1}
+          tabIndex={0}
+        />
+        <button
+          type="submit"
+          className={cn(
+            'flex items-center justify-center rounded-md p-2 h-11 w-11 bg-primary text-primary-foreground focus:outline-none focus:ring-2 focus:ring-primary transition disabled:opacity-50',
+            status === 'streaming' || !input.trim() ? 'cursor-not-allowed' : '',
+          )}
           disabled={status === 'streaming' || !input.trim()}
-          onClick={() => handleSubmit()}
           aria-label={status === 'streaming' ? 'Stop' : 'Send'}
+          tabIndex={0}
         >
           {status === 'streaming' ? (
-            <StopIcon className="h-4 w-4" />
+            <StopIcon className="size-5" />
           ) : (
-            <ArrowUpIcon className="h-4 w-4" />
+            <ArrowUpIcon className="size-5" />
           )}
-        </Button>
-      </div>
+        </button>
+      </form>
 
       <AnimatePresence>
         {attachments.length > 0 && (
@@ -257,7 +275,7 @@ export function PureMultimodalInput({
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 10 }}
             transition={{ duration: 0.2 }}
-            className="flex flex-row gap-2"
+            className="flex flex-row gap-2 bg-muted/40 rounded-lg p-2"
           >
             {attachments.map((attachment) => (
               <PreviewAttachment
@@ -325,7 +343,7 @@ function PureAttachmentsButton({
   return (
     <Button
       data-testid="attachments-button"
-      className="rounded-md rounded-bl-lg p-[7px] h-fit dark:border-zinc-700 hover:dark:bg-zinc-900 hover:bg-zinc-200"
+      className="rounded-md rounded-bl-lg p-[7px] h-fit border border-border hover:bg-muted"
       onClick={(event) => {
         event.preventDefault();
         fileInputRef.current?.click();
@@ -350,7 +368,7 @@ function PureStopButton({
   return (
     <Button
       data-testid="stop-button"
-      className="rounded-full p-1.5 h-fit border dark:border-zinc-600"
+      className="rounded-full p-1.5 h-fit border border-border"
       onClick={(event) => {
         event.preventDefault();
         stop();
@@ -376,7 +394,7 @@ function PureSendButton({
   return (
     <Button
       data-testid="send-button"
-      className="rounded-full p-1.5 h-fit border dark:border-zinc-600"
+      className="rounded-full p-1.5 h-fit border border-border"
       onClick={(event) => {
         event.preventDefault();
         submitForm();

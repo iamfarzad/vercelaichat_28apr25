@@ -1,10 +1,10 @@
 import type { Chat } from '@/lib/db/schema';
-import {
-  SidebarMenuAction,
-  SidebarMenuButton,
-  SidebarMenuItem,
-} from './ui/sidebar';
 import Link from 'next/link';
+import {
+  SidebarMenuItem,
+  SidebarMenuButton,
+  SidebarMenuAction,
+} from './ui/sidebar';
 import {
   DropdownMenu,
   DropdownMenuContent,

@@ -1,12 +1,15 @@
+'use client';
+
 import type { UIMessage } from 'ai';
 import { PreviewMessage, ThinkingMessage } from './message';
 import { useScrollToBottom } from './use-scroll-to-bottom';
 import { Greeting } from './greeting';
-import { memo } from 'react';
+import { memo, useEffect, useState } from 'react';
 import { cn } from '@/lib/utils';
 import type { Vote } from '@/lib/db/schema';
 import equal from 'fast-deep-equal';
 import type { UseChatHelpers } from '@ai-sdk/react';
+import { ChatErrorState } from './chat-error-boundary';
 
 interface MessagesProps {
   chatId: string;
@@ -32,6 +35,35 @@ function PureMessages({
 }: MessagesProps) {
   const [messagesContainerRef, messagesEndRef] =
     useScrollToBottom<HTMLDivElement>();
+  
+  const [error, setError] = useState<Error | null>(null);
+
+  // Reset error state when messages change
+  useEffect(() => {
+    if (messages.length > 0) {
+      setError(null);
+    }
+  }, [messages]);
+
+  // Handle errors during message loading or streaming
+  useEffect(() => {
+    if (status === 'error') {
+      setError(new Error('Failed to load or send messages'));
+    }
+  }, [status]);
+
+  if (error) {
+    return (
+      <ChatErrorState 
+        error={error}
+        retry={() => {
+          setError(null);
+          reload();
+        }}
+        className={className}
+      />
+    );
+  }
 
   return (
     <div
@@ -41,7 +73,7 @@ function PureMessages({
         className,
       )}
     >
-      {messages.length === 0 && <Greeting />}
+      {messages.length === 0 && status !== 'error' && <Greeting />}
 
       {messages.map((message, index) => (
         <PreviewMessage
@@ -64,6 +96,11 @@ function PureMessages({
       {status === 'submitted' &&
         messages.length > 0 &&
         messages[messages.length - 1].role === 'user' && (
+          <ThinkingMessage className={className} />
+        )}
+
+      {status === 'streaming' &&
+        messages.length > 0 && (
           <ThinkingMessage className={className} />
         )}
 

@@ -17,4 +17,9 @@ export const chatModels: Array<ChatModel> = [
     name: 'Reasoning model',
     description: 'Uses advanced reasoning',
   },
+  {
+    id: 'perplexity-chat',
+    name: 'Perplexity',
+    description: 'Perplexity AI chat completions and search',
+  },
 ];

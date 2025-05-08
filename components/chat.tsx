@@ -17,7 +17,7 @@ import { unstable_serialize } from 'swr/infinite';
 import { getChatHistoryPaginationKey } from './sidebar-history';
 import { toast } from './toast';
 import type { Session } from 'next-auth';
-import { cn } from '@/lib/utils';
+import { cn } from '../lib/utils';
 
 export function Chat({
   id,
@@ -49,11 +49,11 @@ export function Chat({
     stop,
     reload,
   } = useChat({
-    id,
+    id: 'main',
+    persistKey: 'chat-main',
     initialMessages,
     experimental_throttle: 100,
     sendExtraMessageFields: true,
-
     generateId: generateUUID,
     experimental_prepareRequestBody: (body) => ({
       id,
@@ -99,7 +99,7 @@ export function Chat({
           className="px-4 md:px-6"
         />
 
-        <form className="flex mx-auto px-4 md:px-6 bg-white/95 backdrop-blur-sm pb-4 md:pb-6 gap-2 w-full md:max-w-3xl">
+        <form className="flex mx-auto px-4 md:px-6 bg-card/95 backdrop-blur-sm pb-4 md:pb-6 gap-2 w-full md:max-w-3xl">
           {!isReadonly && (
             <PureMultimodalInput
               chatId={id}
@@ -113,7 +113,7 @@ export function Chat({
               messages={messages}
               setMessages={setMessages}
               append={append}
-              className="bg-white/95 backdrop-blur-sm"
+              className="bg-card/95 backdrop-blur-sm"
             />
           )}
         </form>

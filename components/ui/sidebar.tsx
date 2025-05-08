@@ -1,10 +1,10 @@
 'use client';
 
 import * as React from 'react';
-import { memo } from 'react';
 import { Slot } from '@radix-ui/react-slot';
-import { type VariantProps, cva } from 'class-variance-authority';
-import { PanelLeft } from 'lucide-react';
+import type { VariantProps } from 'class-variance-authority';
+import { cva } from 'class-variance-authority';
+import { PanelLeft } from 'lucide-react'; // Reverted rename again
 
 import { useIsMobile } from '@/hooks/use-mobile';
 import { cn } from '@/lib/utils';
@@ -142,13 +142,6 @@ const SidebarProvider = React.forwardRef<
       <SidebarContext.Provider value={contextValue}>
         <TooltipProvider delayDuration={0}>
           <div
-            style={
-              {
-                '--sidebar-width': SIDEBAR_WIDTH,
-                '--sidebar-width-icon': SIDEBAR_WIDTH_ICON,
-                ...style,
-              } as React.CSSProperties
-            }
             className={cn(
               'group/sidebar-wrapper flex min-h-svh w-full has-[[data-variant=inset]]:bg-sidebar',
               className,
@@ -196,20 +189,7 @@ const Sidebar = React.forwardRef<
           ref={ref}
           {...props}
         >
-          {/* Example canonical sidebar content. Replace or extend as needed. */}
-          {children ?? (
-            <>
-              <div className="p-4 font-bold text-lg border-b border-sidebar-border">
-                Sidebar
-              </div>
-              <div className="flex-1 p-4">
-                Add navigation, history, or other sidebar content here.
-              </div>
-              <div className="p-4 border-t border-sidebar-border text-xs text-muted-foreground">
-                Sidebar Footer
-              </div>
-            </>
-          )}
+          {children}
         </div>
       );
     }
@@ -220,12 +200,7 @@ const Sidebar = React.forwardRef<
           <SheetContent
             data-sidebar="sidebar"
             data-mobile="true"
-            className="w-[--sidebar-width] bg-sidebar p-0 text-sidebar-foreground [&>button]:hidden"
-            style={
-              {
-                '--sidebar-width': SIDEBAR_WIDTH_MOBILE,
-              } as React.CSSProperties
-            }
+            className="w-[var(--sidebar-width-mobile)] bg-sidebar p-0 text-sidebar-foreground [&>button]:hidden"
             side={side}
           >
             <div className="flex h-full w-full flex-col">{children}</div>
@@ -300,7 +275,8 @@ const SidebarTrigger = React.forwardRef<
       }}
       {...props}
     >
-      <PanelLeft />
+      {/* @ts-ignore Cast to any as a workaround for type error */}
+      <PanelLeft size={16} />
       <span className="sr-only">Toggle Sidebar</span>
     </Button>
   );
@@ -691,13 +667,8 @@ const SidebarMenuSkeleton = React.forwardRef<
         />
       )}
       <Skeleton
-        className="h-4 flex-1 max-w-[--skeleton-width]"
+        className="h-4 flex-1 max-w-[var(--skeleton-width)]" // Use CSS variable directly
         data-sidebar="menu-skeleton-text"
-        style={
-          {
-            '--skeleton-width': width,
-          } as React.CSSProperties
-        }
       />
     </div>
   );

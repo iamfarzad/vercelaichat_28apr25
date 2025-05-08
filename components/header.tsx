@@ -2,9 +2,9 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import ThemeToggle from './theme-toggle';
-import SearchBar from './search-bar';
-import { useIsMobile } from '../hooks/use-mobile';
+import ThemeToggle from '@/components/theme-toggle';
+import SearchBar from '@/components/search-bar';
+import { useIsMobile } from '@/hooks/use-mobile';
 import { useState } from 'react';
 
 export function Header() {
@@ -37,7 +37,7 @@ export function Header() {
         >
           <span className="relative flex items-center">
             <span
-              className="absolute w-2 h-2 rounded-full bg-brand-orange animate-glow-dot transition-colors duration-300"
+              className="absolute size-2 rounded-full bg-brand-orange animate-glow-dot transition-colors duration-300"
               style={{ boxShadow: '0 0 8px 2px oklch(0.686 0.219 41.6)' }}
               aria-hidden="true"
             />
@@ -49,14 +49,19 @@ export function Header() {
 
         {/* Centered nav */}
         {!isMobile && (
-          <nav className="flex-1 flex justify-center" aria-label="Main navigation">
+          <nav
+            className="flex-1 flex justify-center"
+            aria-label="Main navigation"
+          >
             <div className="flex items-center gap-6">
               {navLinks.map((link) => (
                 <Link
                   key={link.href}
                   href={link.href}
                   className={`text-sm text-muted-foreground hover:text-brand-orange transition-colors ${
-                    pathname === link.href ? 'font-bold text-brand-orange underline underline-offset-4' : ''
+                    pathname === link.href
+                      ? 'font-bold text-brand-orange underline underline-offset-4'
+                      : ''
                   }`}
                   aria-current={pathname === link.href ? 'page' : undefined}
                 >

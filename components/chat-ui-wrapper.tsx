@@ -1,16 +1,9 @@
 'use client';
 
-import React, {
-  createContext,
-  useRef,
-  useState,
-  useLayoutEffect,
-  memo,
-} from 'react';
+import React, { createContext, useRef, useState, useLayoutEffect } from 'react';
 import { Chat } from './chat';
 import { ChatHeader } from './chat-header';
-import { cn } from '@/lib/utils';
-
+import { cn } from '../lib/utils';
 import type { Session } from 'next-auth';
 import type { UIMessage } from 'ai';
 import type { VisibilityType } from './visibility-selector';
@@ -52,7 +45,7 @@ export function ChatUIWrapper({
     if (containerRef.current) {
       setContainer(containerRef.current);
     }
-  }, [containerRef.current]);
+  }, []);
 
   return (
     <TooltipContainerContext.Provider value={container}>
@@ -60,23 +53,23 @@ export function ChatUIWrapper({
         ref={containerRef}
         className={cn(
           'relative flex h-full w-full',
-          'bg-background', // solid background, theme-aware
+          'bg-background/95 backdrop-blur-sm',
           className,
         )}
       >
         <div className="flex-1 flex flex-col h-full overflow-hidden">
-          <header className="flex items-center gap-2 px-4 py-3 border-b border-border bg-background/95 backdrop-blur-sm">
+          <header className="flex items-center gap-2 px-4 py-3 border-b border-border/40 bg-background/95 backdrop-blur-sm">
             <ChatHeader
               chatId={id}
               isReadonly={isReadonly}
               selectedModelId={selectedChatModel}
               selectedVisibilityType={selectedVisibilityType}
               session={session}
+              onClear={() => {}}
             />
           </header>
 
           <div className="flex-1 flex flex-col min-h-0 overflow-hidden relative">
-            {/* Content area */}
             <div className="max-w-3xl mx-auto flex flex-col flex-1 min-w-0 min-h-0 bg-transparent px-4">
               <Chat
                 id={id}

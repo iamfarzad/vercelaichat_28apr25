@@ -2,9 +2,9 @@
 
 import type { UIMessage } from 'ai';
 import { AnimatePresence, motion } from 'framer-motion';
-import { useState, memo } from 'react';
+import { useState, memo, useCallback } from 'react';
 import type { Vote } from '../lib/db/schema';
-import { cn } from '../lib/utils';
+import { cn } from '@/lib/utils';
 import { DocumentToolCall, DocumentToolResult } from './document';
 import { PencilEditIcon, SparklesIcon } from './icons';
 import { Markdown } from './markdown';
@@ -40,6 +40,29 @@ const PurePreviewMessage = ({
   className?: string;
 }) => {
   const [mode, setMode] = useState<'view' | 'edit'>('view');
+  const [messageError, setMessageError] = useState<Error | null>(null);
+
+  const handleRetry = useCallback(() => {
+    setMessageError(null);
+    reload();
+  }, [reload]);
+
+  if (messageError) {
+    return (
+      <div className="flex items-center justify-between p-4 bg-muted/50 rounded-lg">
+        <div className="flex items-center gap-2 text-sm text-muted-foreground">
+          <span>Failed to load message</span>
+          <button
+            type="button"
+            onClick={handleRetry}
+            className="text-primary hover:underline"
+          >
+            Retry
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <AnimatePresence>
@@ -47,6 +70,9 @@ const PurePreviewMessage = ({
         data-testid={`message-${message.role}`}
         className={cn(
           'w-full mx-auto max-w-3xl px-2 sm:px-4 group/message overflow-hidden',
+          {
+            'opacity-50': isLoading,
+          },
           className,
         )}
         initial={{ y: 5, opacity: 0 }}
@@ -100,27 +126,118 @@ const PurePreviewMessage = ({
               }
 
               if (type === 'text') {
-                if (mode === 'view') {
+                if (mode === 'view' && part.text.trim()) {
                   return (
                     <div key={key} className="flex flex-row gap-2 items-start">
-                      {message.role === 'user' && !isReadonly && (
-                        <Tooltip>
-                          <TooltipTrigger asChild>
-                            <Button
-                              data-testid="message-edit-button"
-                              variant="ghost"
-                              className="px-2 h-fit rounded-full text-muted-foreground opacity-0 group-hover/message:opacity-100"
-                              onClick={() => {
-                                setMode('edit');
-                              }}
-                            >
-                              <PencilEditIcon />
-                            </Button>
-                          </TooltipTrigger>
-                          <TooltipContent>Edit message</TooltipContent>
-                        </Tooltip>
-                      )}
-
+                      <div className="flex flex-col items-center">
+                        {/* Toolbar */}
+                        <div className="flex gap-1 mb-1 opacity-80 group-hover/message:opacity-100 transition-opacity">
+                          {/* Edit */}
+                          {message.role === 'user' && !isReadonly && (
+                            <Tooltip>
+                              <TooltipTrigger asChild>
+                                <Button
+                                  aria-label="Edit message"
+                                  variant="ghost"
+                                  size="icon"
+                                  className="rounded-full text-muted-foreground"
+                                  onClick={() => setMode('edit')}
+                                >
+                                  <PencilEditIcon />
+                                </Button>
+                              </TooltipTrigger>
+                              <TooltipContent>Edit</TooltipContent>
+                            </Tooltip>
+                          )}
+                          {/* Copy */}
+                          <Tooltip>
+                            <TooltipTrigger asChild>
+                              <Button
+                                aria-label="Copy message"
+                                variant="ghost"
+                                size="icon"
+                                className="rounded-full text-muted-foreground"
+                                onClick={() => {
+                                  navigator.clipboard.writeText(part.text);
+                                }}
+                              >
+                                <svg width="16" height="16" fill="none" viewBox="0 0 16 16">
+                                  <rect x="4" y="4" width="8" height="8" rx="2" stroke="currentColor" strokeWidth="1.5"/>
+                                  <rect x="2.75" y="2.75" width="8.5" height="8.5" rx="2" stroke="currentColor" strokeWidth="1"/>
+                                </svg>
+                              </Button>
+                            </TooltipTrigger>
+                            <TooltipContent>Copy</TooltipContent>
+                          </Tooltip>
+                          {/* Delete */}
+                          {!isReadonly && (
+                            <Tooltip>
+                              <TooltipTrigger asChild>
+                                <Button
+                                  aria-label="Delete message"
+                                  variant="ghost"
+                                  size="icon"
+                                  className="rounded-full text-muted-foreground"
+                                  onClick={() => {
+                                    setMessages((msgs: UIMessage[]) =>
+                                      msgs.filter((m) => m.id !== message.id)
+                                    );
+                                  }}
+                                >
+                                  <svg width="16" height="16" fill="none" viewBox="0 0 16 16">
+                                    <path d="M6 6l4 4M10 6l-4 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
+                                    <rect x="3" y="3" width="10" height="10" rx="2" stroke="currentColor" strokeWidth="1"/>
+                                  </svg>
+                                </Button>
+                              </TooltipTrigger>
+                              <TooltipContent>Delete</TooltipContent>
+                            </Tooltip>
+                          )}
+                          {/* Retry */}
+                          {message.role === 'assistant' && !isLoading && !isReadonly && (
+                            <Tooltip>
+                              <TooltipTrigger asChild>
+                                <Button
+                                  aria-label="Retry message"
+                                  variant="ghost"
+                                  size="icon"
+                                  className="rounded-full text-muted-foreground"
+                                  onClick={handleRetry}
+                                >
+                                  <LoaderIcon className="animate-spin" />
+                                </Button>
+                              </TooltipTrigger>
+                              <TooltipContent>Retry</TooltipContent>
+                            </Tooltip>
+                          )}
+                          {/* Markdown Preview Toggle */}
+                          <Tooltip>
+                            <TooltipTrigger asChild>
+                              <Button
+                                aria-label="Toggle markdown preview"
+                                variant="ghost"
+                                size="icon"
+                                className="rounded-full text-muted-foreground"
+                                onClick={() => setShowMarkdown((v) => !v)}
+                              >
+                                <svg width="16" height="16" fill="none" viewBox="0 0 16 16">
+                                  <path d="M2 4.5A1.5 1.5 0 013.5 3h9A1.5 1.5 0 0114 4.5v7A1.5 1.5 0 0112.5 13h-9A1.5 1.5 0 012 11.5v-7z" stroke="currentColor" strokeWidth="1"/>
+                                  <path d="M5 8h1v2h1V8h1" stroke="currentColor" strokeWidth="1" strokeLinecap="round"/>
+                                </svg>
+                              </Button>
+                            </TooltipTrigger>
+                            <TooltipContent>Toggle Markdown</TooltipContent>
+                          </Tooltip>
+                        </div>
+                        {/* Timestamp/Status */}
+                        <span className="text-xs text-muted-foreground select-none">
+                          {message.createdAt
+                            ? new Date(message.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+                            : isLoading
+                            ? 'Sending...'
+                            : 'Sent'}
+                        </span>
+                      </div>
                       <div
                         data-testid="message-content"
                         className={cn('flex flex-col gap-4', {
@@ -128,7 +245,15 @@ const PurePreviewMessage = ({
                             message.role === 'user',
                         })}
                       >
-                        <Markdown>{part.text}</Markdown>
+                        <Markdown
+                          onError={() =>
+                            setMessageError(
+                              new Error('Failed to render message content'),
+                            )
+                          }
+                        >
+                          {part.text}
+                        </Markdown>
                       </div>
                     </div>
                   );

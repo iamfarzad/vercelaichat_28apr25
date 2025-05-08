@@ -1,7 +1,7 @@
 'use client';
 
 import { type ReactNode, useMemo, useState } from 'react';
-import { Button } from '@/components/ui/button';
+import { Button, type ButtonProps } from '@/components/ui/button'; // Added ButtonProps
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -16,7 +16,7 @@ import {
   GlobeIcon,
   LockIcon,
 } from './icons';
-import { useChatVisibility } from '@/hooks/use-chat-visibility';
+// import { useChatVisibility } from '@/hooks/use-chat-visibility'; // Removed internal hook
 
 export type VisibilityType = 'private' | 'public';
 
@@ -40,24 +40,35 @@ const visibilities: Array<{
   },
 ];
 
-export function VisibilitySelector({
-  chatId,
-  className,
-  selectedVisibilityType,
-}: {
+// Define props interface
+interface VisibilitySelectorProps extends Omit<ButtonProps, 'onSelect'> {
+  // Omit onSelect from ButtonProps if it clashes
   chatId: string;
   selectedVisibilityType: VisibilityType;
-} & React.ComponentProps<typeof Button>) {
+  onVisibilityChange: (updatedVisibilityType: VisibilityType) => void; // Added prop
+  className?: string; // className was implicitly part of ButtonProps
+}
+
+export function VisibilitySelector({
+  chatId, // Keep chatId if needed for other logic, though not directly for visibility state now
+  className,
+  selectedVisibilityType,
+  onVisibilityChange, // Use passed prop
+  ...buttonProps // Spread remaining button props
+}: VisibilitySelectorProps) {
   const [open, setOpen] = useState(false);
 
-  const { visibilityType, setVisibilityType } = useChatVisibility({
-    chatId,
-    initialVisibility: selectedVisibilityType,
-  });
+  // const { visibilityType, setVisibilityType } = useChatVisibility({ // Removed
+  //   chatId,
+  //   initialVisibility: selectedVisibilityType,
+  // });
 
   const selectedVisibility = useMemo(
-    () => visibilities.find((visibility) => visibility.id === visibilityType),
-    [visibilityType],
+    () =>
+      visibilities.find(
+        (visibility) => visibility.id === selectedVisibilityType,
+      ), // Use prop
+    [selectedVisibilityType],
   );
 
   return (
@@ -65,13 +76,15 @@ export function VisibilitySelector({
       <DropdownMenuTrigger
         asChild
         className={cn(
+          // className from props is applied here
           'w-fit data-[state=open]:bg-accent data-[state=open]:text-accent-foreground',
           className,
         )}
       >
         <Button
           variant="outline"
-          className="hidden md:flex md:px-2 md:h-[34px]"
+          // className="hidden md:flex md:px-2 md:h-[34px]" // Removed className from here as it's on DropdownMenuTrigger, parent className handles styling
+          {...buttonProps} // Spread other button props
         >
           {selectedVisibility?.icon}
           {selectedVisibility?.label}
@@ -84,11 +97,12 @@ export function VisibilitySelector({
           <DropdownMenuItem
             key={visibility.id}
             onSelect={() => {
-              setVisibilityType(visibility.id);
+              // This is the correct onSelect for DropdownMenuItem
+              onVisibilityChange(visibility.id); // Call passed callback
               setOpen(false);
             }}
             className="gap-4 group/item flex flex-row justify-between items-center"
-            data-active={visibility.id === visibilityType}
+            data-active={visibility.id === selectedVisibilityType} // Use prop
           >
             <div className="flex flex-col gap-1 items-start">
               {visibility.label}

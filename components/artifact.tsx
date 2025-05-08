@@ -12,7 +12,7 @@ import {
 import useSWR, { useSWRConfig } from 'swr';
 import { useDebounceCallback, useWindowSize } from 'usehooks-ts';
 import type { Document, Vote } from '@/lib/db/schema';
-import { fetcher } from '@/lib/utils';
+import { fetcher, cn } from '@/lib/utils';
 import { MultimodalInput } from './multimodal-input';
 import { Toolbar } from './toolbar';
 import { VersionFooter } from './version-footer';
@@ -27,7 +27,6 @@ import { sheetArtifact } from '@/artifacts/sheet/client';
 import { textArtifact } from '@/artifacts/text/client';
 import equal from 'fast-deep-equal';
 import type { UseChatHelpers } from '@ai-sdk/react';
-import { cn } from '@/lib/utils';
 
 export const artifactDefinitions = [
   textArtifact,
@@ -260,7 +259,6 @@ function PureArtifact({
           data-testid="artifact"
           className={cn(
             'flex flex-row h-dvh w-dvw fixed top-0 left-0 z-50 bg-transparent',
-            className
           )}
           initial={{ opacity: 1 }}
           animate={{ opacity: 1 }}
