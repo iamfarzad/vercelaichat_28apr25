@@ -10,34 +10,33 @@ interface AskBarProps {
 export function AskBar({ onSend }: AskBarProps) {
   const [input, setInput] = useState('');
 
-  function handleSend() {
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
     if (input.trim()) {
       onSend(input.trim());
-      setInput('');
+      setInput(''); // Optionally clear input
     }
-  }
+  };
 
   return (
-    <div className="flex items-center w-full max-w-md mx-auto bg-card/80 backdrop-blur-md rounded-full px-5 py-3 shadow-lg border border-border">
-      {/* biome-ignore lint/nursery/noStaticElementInteractions: <explanation> */}
+    <form
+      onSubmit={handleSubmit}
+      className="flex items-center w-full max-w-md mx-auto bg-card/80 backdrop-blur-md rounded-full px-5 py-3 shadow-lg border border-border"
+    >
       <input
         className="flex-1 bg-transparent outline-none text-base placeholder:text-muted-foreground"
         placeholder="Ask me anything about..."
         value={input}
         onChange={(e) => setInput(e.target.value)}
-        onKeyDown={(e) => {
-          if (e.key === 'Enter') handleSend();
-        }}
       />
       <button
-        type="button"
-        onClick={handleSend}
+        type="submit"
         className={`ml-2 text-brand-orange hover:text-[oklch(var(--brand-orange)/0.8)] transition-colors p-1 rounded-full ${!input.trim() ? 'opacity-50 cursor-not-allowed' : ''}`}
         disabled={!input.trim()}
         aria-label="Send question"
       >
         <ArrowRight size={18} />
       </button>
-    </div>
+    </form>
   );
 }

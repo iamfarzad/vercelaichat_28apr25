@@ -36,8 +36,8 @@ interface ParticleOrbProps {
 
 const ParticleOrb: React.FC<ParticleOrbProps> = ({
   color = 'var(--orb-point-color)',
-  size = 120,
-  particleCount = 1000, // Increased from 100 to 1000 for denser effect
+  size = 160,
+  particleCount = 300, // Reduced from 1000 to 300 for less density
   interactive = true,
   className = '',
   highQuality = true,
@@ -165,8 +165,8 @@ const ParticleOrb: React.FC<ParticleOrbProps> = ({
       const particleSize = Math.random() * 0.8 + 0.2; // Reduced size range
 
       const density = Math.random() * 30 + 1;
-      const colorVariation = Math.random() * 10 - 5; // Reduced variation
-      const brightness = Math.random() * 0.3 + 0.7; // Increased base brightness
+      const colorVariation = Math.random() * 40 - 20; // increased variation for contrast
+      const brightness = Math.random() * 0.8 + 0.2; // wider brightness range
 
       // Higher base alpha for more visible particles
       const distanceRatio = distance / orbRadius;
@@ -184,7 +184,7 @@ const ParticleOrb: React.FC<ParticleOrbProps> = ({
       );
       const glowColor = createColor(
         type === 'primary' ? primaryRGB : secondaryRGB,
-        0.4, // Increased glow opacity
+        0.2, // Reduced glow opacity
         colorVariation,
       );
 
@@ -220,14 +220,14 @@ const ParticleOrb: React.FC<ParticleOrbProps> = ({
         0,
         particle.x,
         particle.y,
-        particle.size * 4, // Increased glow radius
+        particle.size * 2, // Reduced glow radius
       );
       glow.addColorStop(0, particle.glowColor);
       glow.addColorStop(0.5, particle.glowColor.replace(/[\d.]+\)$/, '0.2)')); // Softer middle
       glow.addColorStop(1, 'rgba(0,0,0,0)');
 
       ctx.beginPath();
-      ctx.arc(particle.x, particle.y, particle.size * 4, 0, Math.PI * 2);
+      ctx.arc(particle.x, particle.y, particle.size * 2, 0, Math.PI * 2);
       ctx.fillStyle = glow;
       ctx.fill();
     }
@@ -286,9 +286,9 @@ const ParticleOrb: React.FC<ParticleOrbProps> = ({
     // Draw connections first for better layering
     const maxConnectionDistance = highQuality ? 15 : 10; // Reduced from 35/25
 
-    // Use different blend modes based on theme
+    // Use default blend mode for clarity
     if (highQuality) {
-      ctx.globalCompositeOperation = isDarkMode ? 'screen' : 'lighter';
+      ctx.globalCompositeOperation = 'source-over'; // use default blend mode for clarity
     }
 
     // First pass: draw connections
@@ -420,6 +420,7 @@ const ParticleOrb: React.FC<ParticleOrbProps> = ({
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
     ctx.clearRect(0, 0, canvas.width, canvas.height);
+
     timeRef.current = timestamp * 0.001;
     updateParticles(ctx, canvas.width, canvas.height, timestamp);
     animationRef.current = requestAnimationFrame(animate);
@@ -517,18 +518,20 @@ const ParticleOrb: React.FC<ParticleOrbProps> = ({
     <div
       ref={containerRef}
       className={cn(
-        'orb-container rounded-3xl shadow-xl bg-background/80 border border-border overflow-hidden transition-all duration-500',
-        className
+        'relative orb-container rounded-3xl overflow-hidden transition-all duration-500', // Added 'relative'
+        className,
       )}
-      style={{
-        '--orb-container-size': `${size * 2}px`,
-        '--orb-size': `${size}px`,
-        '--orb-color': color,
-        '--orb-color-ring': `${color}20`,
-        '--orb-color-glow': `${color}40`,
-        width: `${size * 2}px`,
-        height: `${size * 2}px`,
-      } as React.CSSProperties}
+      style={
+        {
+          '--orb-container-size': `${size * 2}px`,
+          '--orb-size': `${size}px`,
+          '--orb-color': color,
+          '--orb-color-ring': `${color}20`,
+          '--orb-color-glow': `${color}40`,
+          width: `${size * 2}px`,
+          height: `${size * 2}px`,
+        } as React.CSSProperties
+      }
     >
       <div className="orb-glow pointer-events-none" />
       <canvas
@@ -544,4 +547,26 @@ const ParticleOrb: React.FC<ParticleOrbProps> = ({
   );
 };
 
+  <style jsx global>{`
+    .orb-container {
+      position: relative;
+      overflow: hidden;
+    }
+    .orb-container::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle at top left, rgba(255,255,255,0.15), transparent 60%);
+      transform: rotate(45deg);
+      animation: orb-shimmer 2.5s infinite;
+      pointer-events: none;
+    }
+    @keyframes orb-shimmer {
+      0%   { transform: translate(-100%, -100%) rotate(45deg); }
+      100% { transform: translate(100%, 100%)   rotate(45deg); }
+    }
+  `}</style>
 export default ParticleOrb;

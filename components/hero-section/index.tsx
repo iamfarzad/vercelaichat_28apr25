@@ -1,8 +1,10 @@
 'use client';
 
-import { useState } from 'react';
+:start_line:3
+-------
 import { motion } from 'framer-motion';
 import { ModernButton } from '@/components/ui/modern-button';
+import { useChatStore } from '@/stores/chatStore'; // Import chat store
 import MinimalOrb from './ParticleOrb';
 import { AskBar } from './ask-bar';
 import { AnimatedGridPattern } from '@/components/ui/animated-grid-pattern';
@@ -20,13 +22,20 @@ export function HeroSection({
   title,
   description,
   buttonText,
+:start_line:25
+-------
   onButtonClick,
   className = '',
 }: HeroSectionProps) {
-  const [askInput, setAskInput] = useState('');
+  const setInitialQuery = useChatStore((state) => state.setInitialQuery);
 
   const handleAskSubmit = (value: string) => {
-    onButtonClick(value);
+    if (value.trim()) {
+      setInitialQuery(value.trim());
+    }
+    // Optionally, call onButtonClick if it's meant for a different action now,
+    // or remove it if the AskBar is the primary interaction.
+    // For now, let's assume onButtonClick is for the separate button.
   };
 
   return (
@@ -61,7 +70,7 @@ export function HeroSection({
         </p>
       </motion.div>
 
-      <div className="w-full flex flex-col items-center mt-12 mb-8 relative z-10">
+      <div className="w-full grid place-items-center mt-12 mb-8 relative z-10">
         <MinimalOrb />
         <div className="w-full max-w-md mt-8 flex flex-col items-center gap-4">
           <AskBar onSend={handleAskSubmit} />

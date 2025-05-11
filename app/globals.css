@@ -169,6 +169,7 @@
   .bg-background { background-color: var(--background) !important; }
   .text-foreground { color: var(--foreground) !important; }
   .border-border { border-color: var(--border) !important; }
+  .bg-sidebar { background-color: var(--sidebar-background) !important; } /* Added this line */
 
   @keyframes glow-dot {
     0%, 100% {

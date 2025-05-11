@@ -20,7 +20,7 @@
     "setup": "[ -f .env ] || cp .env.example .env && pnpm install && pnpm db:generate && pnpm dev"
   },
   "dependencies": {
-    "@ai-sdk/perplexity": "^1.1.8",
+    "@ai-sdk/perplexity": "^1.1.9",
     "@ai-sdk/react": "^1.2.8",
     "@ai-sdk/xai": "^1.2.10",
     "@codemirror/lang-javascript": "^6.2.2",

@@ -1,7 +1,8 @@
 'use client';
 
 import React, { createContext, useRef, useState, useLayoutEffect } from 'react';
-import { Chat } from './chat';
+// TODO: Investigate and fix Chat import and usage
+// import { Chat } from './chat';
 import { ChatHeader } from './chat-header';
 import { cn } from '../lib/utils';
 import type { Session } from 'next-auth';
@@ -71,7 +72,8 @@ export function ChatUIWrapper({
 
           <div className="flex-1 flex flex-col min-h-0 overflow-hidden relative">
             <div className="max-w-3xl mx-auto flex flex-col flex-1 min-w-0 min-h-0 bg-transparent px-4">
-              <Chat
+              {/* TODO: Investigate and fix Chat import and usage */}
+              {/* <Chat
                 id={id}
                 initialMessages={initialMessages}
                 selectedChatModel={selectedChatModel}
@@ -79,7 +81,7 @@ export function ChatUIWrapper({
                 isReadonly={isReadonly}
                 session={session}
                 className={className}
-              />
+              /> */}
             </div>
           </div>
         </div>

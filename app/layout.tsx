@@ -3,6 +3,9 @@ import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import { ThemeProvider } from '@/components/theme-provider';
 import { SidebarProvider } from '@/components/ui/sidebar';
+import Header from '@/components/header'; // Ensured Header is a default import
+import { Footer } from '@/components/footer';
+import GlobalChatPopover from '@/components/GlobalChatPopover';
 
 import './globals.css';
 import { SessionProvider } from 'next-auth/react';
@@ -66,15 +69,18 @@ export default async function RootLayout({
         />
       </head>
       <body className="antialiased" suppressHydrationWarning>
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="system"
-          enableSystem
-          disableTransitionOnChange
-        >
+        <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           <Toaster position="top-center" />
           <SidebarProvider>
-            <SessionProvider>{children}</SessionProvider>
+            <SessionProvider>
+              <div className="flex flex-col min-h-screen">
+                <Header />
+                <main className="grow">{children}</main>{' '}
+                {/* Changed flex-grow to grow */}
+                <Footer />
+                <GlobalChatPopover />
+              </div>
+            </SessionProvider>
           </SidebarProvider>
         </ThemeProvider>
       </body>

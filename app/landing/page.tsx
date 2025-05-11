@@ -1,14 +1,15 @@
 'use client';
 
-import { Header } from '@/components/header';
-import { Footer } from '@/components/footer';
-import { CombinedOrb } from '@/components/hero-section/combined-orb';
+// import { Header } from '@/components/header'; // Removed
+// import { Footer } from '@/components/footer'; // Removed
+import OrbDemo from '@/components/hero-section/unified-orb'; // Changed to default import and using actual export name
 import { ChatPopover } from '@/components/chat-popover';
 import { useState } from 'react';
 import { HeroSection } from '@/components/hero-section';
 import { cn } from '@/lib/utils';
 
-import type { Session, UserType } from 'next-auth';
+import type { Session } from 'next-auth';
+import type { UserType } from '@/app/(auth)/auth'; // Corrected import path for UserType
 
 export default function LandingPage({
   session,
@@ -43,7 +44,7 @@ export default function LandingPage({
 
   return (
     <div className="flex min-h-screen flex-col bg-gradient-to-b from-gray-100 to-white dark:from-zinc-900 dark:to-zinc-800">
-      <Header />
+      {/* <Header /> Removed */}
       <main className="flex-1 flex flex-col items-center justify-center p-4 md:p-8">
         <div
           className={cn(
@@ -60,7 +61,7 @@ export default function LandingPage({
           <div className="subtle-grid absolute inset-0 -z-10 rounded-xl opacity-30" />
         </div>
       </main>
-      <Footer />
+      {/* <Footer /> Removed */}
 
       <ChatPopover
         open={showChat}
