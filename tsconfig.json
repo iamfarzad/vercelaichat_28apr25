@@ -1,4 +1,5 @@
 {
+  "extends": "./tsconfig.ignore.json",
   "compilerOptions": {
     "target": "ESNext",
     "lib": [
@@ -26,15 +27,26 @@
     "paths": {
       "@/*": [
         "./*"
+      ],
+      "@/components/*": [
+        "components/*"
+      ],
+      "@/lib/*": [
+        "lib/*"
       ]
     }
   },
+  "typeRoots": [
+    "./node_modules/@types",
+    "./src/types"
+  ],
   "include": [
     "next-env.d.ts",
     "**/*.ts",
     "**/*.tsx",
     ".next/types/**/*.ts",
-    "next.config.js"
+    "next.config.js",
+    "src/types/**/*.d.ts"
   ],
   "exclude": [
     "node_modules"

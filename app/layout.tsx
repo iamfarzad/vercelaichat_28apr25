@@ -1,7 +1,8 @@
 import { Toaster } from 'sonner';
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
-import { ThemeProvider } from '@/temp-next/components/theme-provider';
+import { ThemeProvider } from '../components/theme-provider';
+import { ChatRoot } from '@/components/chat/chat-root';
 
 import './globals.css';
 import { SessionProvider } from 'next-auth/react';
@@ -72,7 +73,10 @@ export default async function RootLayout({
           disableTransitionOnChange
         >
           <Toaster position="top-center" />
-          <SessionProvider>{children}</SessionProvider>
+          <SessionProvider>
+            {children}
+            <ChatRoot />
+          </SessionProvider>
         </ThemeProvider>
       </body>
     </html>

@@ -1,0 +1,18 @@
+{
+  "compilerOptions": {
+    "types": [
+      "node",
+      "jest",
+      "@testing-library/jest-dom",
+      "@testing-library/react",
+      "@testing-library/user-event"
+    ]
+  },
+  "exclude": [
+    "node_modules",
+    "**/node_modules/*",
+    "**/.next/*",
+    "**/out/*",
+    "**/dist/*"
+  ]
+}

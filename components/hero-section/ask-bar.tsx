@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { ArrowRight } from 'lucide-react';
 
 interface AskBarProps {
-  onSend: (value: string) => void;
+  onSend: (message: string) => void;
 }
 
 export function AskBar({ onSend }: AskBarProps) {

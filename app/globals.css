@@ -18,12 +18,12 @@
     border-radius: 1rem; /* 16px for a soft brick look */
     border: 2.5px solid #222;
     box-shadow: 0 4px 0 0 #888;
-    background: #ffe3cf; /* Default to a soft orange, override for variants */
+    background: #FF9C54; /* Default to a soft orange, override for variants */
     color: #111;
     letter-spacing: 0.01em;
   }
   .btn-brick-primary {
-    background: #ffe3cf;
+    background: #FF9C54;
     color: #111;
     border-color: #222;
     box-shadow: 0 4px 0 0 #e2bfa3;
@@ -31,7 +31,7 @@
   }
   .btn-brick-primary:hover {
     background: #ffd1ad;
-    box-shadow: 0 6px 0 0 #c98b5f;
+    box-shadow: 0 6px 0 0 #bd7107;
     transform: translateY(-2px) scale(1.03);
   }
   .btn-brick-secondary {

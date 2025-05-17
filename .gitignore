@@ -43,3 +43,6 @@ yarn-error.log*
 /playwright-report/
 /blob-report/
 /playwright/*
+
+# Added to ignore ai-chatbot-main directory
+ai-chatbot-main/

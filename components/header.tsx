@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { ThemeToggle } from '../temp-next/components/theme-toggle';
+import { ThemeToggle } from './ui/theme-toggle';
 import SearchBar from './search-bar';
 
 export function Header() {
@@ -10,7 +10,7 @@ export function Header() {
       <div className="container flex justify-between items-center h-16 px-4">
         <Link href="/" className="flex items-center gap-2">
           <span className="relative">
-            <span className="absolute w-2 h-2 rounded-full bg-brand-orange"></span>
+            <span className="absolute w-2 h-2 rounded-full bg-brand-orange" />
           </span>
           <span className="font-bold text-xl bg-gradient-to-r from-[oklch(var(--brand-orange))] to-[oklch(var(--brand-orange)/0.8)] bg-clip-text text-transparent">
             F.B Consulting
